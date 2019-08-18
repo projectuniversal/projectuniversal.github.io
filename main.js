@@ -7,7 +7,7 @@ getElement = document.getElementById.bind(document)
 
 let gameLoopIntervalId = 0
 let player = getDefaultPlayer()
-let prologueAtom = new Decimal("9e89")
+let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
 let storyId = 0
 let storyTexts = ["story text","story text 2","story text 3","this should not display"]
@@ -41,7 +41,7 @@ function startGame() {
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
-  if (prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e88").times(diff/1000))
+  if (prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
   getElement("atomcount").innerHTML = shortenMoney(prologueAtom)
   player.lastUpdate = thisUpdate
 }
