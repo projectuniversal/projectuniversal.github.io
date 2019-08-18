@@ -1,3 +1,6 @@
-#story {
+#story-container {
   text-align: center;
+}
+#story {
+  display: inline-block;
 }
