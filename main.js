@@ -38,5 +38,6 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   if (prologueAtom.gte(new Decimal("1e80"))) storyId = 2
   getElement("atomcount").innerHTML = shortenMoney(prologueAtom)
   getElement("introstory").innerHTML = storyTexts[storyId]
+  getElement("storynext").style.display = storyId<1?"":"none"
   player.lastUpdate = thisUpdate
 }
