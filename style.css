@@ -1,7 +1,5 @@
 #story-container {
-  height: 100%;
-  position: relative;
-}
-#story {
-  transform: translate(50%, 50%)
+display : flex;
+align-items: center;
+justify-content: center;
 }
