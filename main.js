@@ -10,21 +10,14 @@ let player = getDefaultPlayer()
 let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
 let storyId = 0
-let storyTexts = ["story text","story text 2","story text 3","this should not display"]
+let storyTexts = ["Intro speak","Tells player to turn on gen","Explosion"]
 
 getElement("storynext").onclick = function() {
-    switch (storyId) {
-        case 0:
-        case 1:
-          storyId++
-          break;
-        default:
-          return;
-    }
-    getElement("introstory").innerHTML = storyTexts[storyId]
+    storyId = Math.min(1,storyId+1)
 }
 
 getElement("activategen").onclick = function() {
+    if (storyId < 1) return;
     getElement("activategen").innerHTML = "ACTIVATED"
     prologueGenActivated = true
 }
@@ -42,6 +35,8 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
   if (prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
+  if (prologueAtom.gte(new Decimal("1e80"))) storyId = 2
   getElement("atomcount").innerHTML = shortenMoney(prologueAtom)
+  getElement("introstory").innerHTML = storyTexts[storyId]
   player.lastUpdate = thisUpdate
 }
