@@ -3,7 +3,7 @@ function getDefaultPlayer() {
         // yep, nothing
     }
 }
-getElement = document.getElementById // will work...?
+getElement = document.getElementById.bind(document) // will work...?
 
 let player = getDefaultPlayer()
 let storyId = 0
