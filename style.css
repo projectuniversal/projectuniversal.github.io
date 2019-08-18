@@ -1,16 +1,20 @@
-#story-container {
+body {
+	height: 100vh;
+}
+/*#story-container {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
-}
+}*/
 
 #generator {
-  position: relative;
+  position: fixed;
+  bottom: 0;
 }
-#gentext {
+
+/*#gentext {
   position: fixed;
   bottom: 1vh;
   right: 1vh;
-}
-  
+}*/
