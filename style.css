@@ -6,6 +6,10 @@
 }
 
 #generator {
-  bottom: 10px;
-  right: 10px;
+  position: relative;
+}
+#gentext {
+  position: fixed;
+  bottom: 1vh;
+  right: 1vh;
 }
