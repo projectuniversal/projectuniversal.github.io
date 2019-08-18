@@ -6,6 +6,7 @@ function getDefaultPlayer() {
 getElement = document.getElementById.bind(document) // will work...?
 
 let player = getDefaultPlayer()
+let prolodgeAtom = 9e89 // WHERE IS YOUR BREAK INFINITY
 let storyId = 0
 let storyTexts = ["story text","story text 2","story text 3","this should not display"]
 getElement("storynext").onclick = function() {
