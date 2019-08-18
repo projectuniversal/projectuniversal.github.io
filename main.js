@@ -13,6 +13,9 @@ getElement("storynext").onclick = function() {
         case 0:
         case 1:
           storyId++
+          break;
+        default:
+          return;
     }
     getElement("introstory").innerHTML = storyTexts[storyId]
 }
