@@ -7,7 +7,7 @@ getElement = document.getElementById.bind(document)
 
 let gameLoopIntervalId = 0
 let player = getDefaultPlayer()
-let prologueAtom = new Decimal(9e89)
+let prologueAtom = new Decimal(1)
 let storyId = 0
 let storyTexts = ["story text","story text 2","story text 3","this should not display"]
 getElement("storynext").onclick = function() {
@@ -34,6 +34,7 @@ function startGame() {
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
-  // getElement("atomcount").innerHTML = shortenMoney(prologueAtom)
+  prologueAtom = prologueAtom.times(diff)
+  getElement("atomcount").innerHTML = shortenMoney(prologueAtom)
   player.lastUpdate = thisUpdate
 }
