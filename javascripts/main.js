@@ -88,6 +88,7 @@ function atomPerSec() {
 
 function buyBuilding(id) {
   if (player.storyId<7) return;
+  id--
   if (player.atom.gte(player.buildingCosts[id])) {
     player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
     player.atom = player.atom.sub(player.buildingCosts[id])
