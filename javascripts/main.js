@@ -118,6 +118,10 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   if (player.storyId == 5) {
     prologueAtom = Decimal.pow10(prologueAtom.log10()-0.016*diff)
   }
+  if (player.storyId>=7) {
+      updateBuildings()
+      player.atomInQueue = Decimal.min(player.queueCap, player.atomInQueue.plus(atomPerSec().times(diff).div(1000)))
+  }
   if (!player.inPrologue) {
     player.queueTime += diff*0.001
     if (player.atomInQueue.lt(1)) {
@@ -129,10 +133,6 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
       player.atom = player.atom.plus(atomToAdd)
     }
     checkMilestone()
-  }
-  if (player.storyId>=7) {
-      updateBuildings()
-      player.atomInQueue = Decimal.min(player.queueCap, player.atomInQueue.plus(atomPerSec().times(diff).div(1000)))
   }
     
   updateElement("timeTillNextAtom", shortenMoney(player.queueInterval-player.queueTime))
