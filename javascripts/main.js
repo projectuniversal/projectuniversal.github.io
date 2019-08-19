@@ -41,8 +41,10 @@ function startInterval() {
 }
 
 function startGame() {
+  let savefile = localStorage.getItem(saveName)
+  if (!(savefile === null)) loadGame(savefile)
   startInterval()
-  // There will be other thing here later
+  setInterval(saveGame,5000)
 }
 
 function endPrologue() {
