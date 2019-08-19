@@ -7,7 +7,11 @@ function getDefaultPlayer() {
         queueTime: 0,
         queueInterval: 1,
         atomInQueue: new Decimal(0),
-        queueCap: new Decimal(10)
+        queueCap: new Decimal(10),
+        buildingAmounts: [new Decimal(0)],
+        buildingCosts: [new Decimal(20)],
+        buildingPowers: [new Decimal(0.2)],
+        buildingCostScales: [new Decimal(1.1)]
     }
 }
 getElement = document.getElementById.bind(document)
@@ -16,7 +20,7 @@ let gameLoopIntervalId = 0
 let player = getDefaultPlayer()
 let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
-let storyTexts = ["Intro speak 1", "Intro speak 2", "Intro speak 3", "Intro speak 4", "Tells player to turn on gen","Explosion in 5 secs","The Beginning"]
+let storyTexts = ["Intro speak 1", "Intro speak 2", "Intro speak 3", "Intro speak 4", "Tells player to turn on gen","Explosion in 5 secs","The Beginning","Buildings unlocked"]
 
 setOnclick("storynext", function() {
     player.storyId = Math.min(4,player.storyId+1)
@@ -64,9 +68,40 @@ function addAtomIntoQueue() {
   player.atomInQueue = player.atomInQueue.plus(addAmount)
 }
 
+function checkMilestone() {
+  switch (player.storyId) {
+    case 6:
+      if (player.atom.gte(20)) player.storyId++
+      break;
+    default:
+      return;
+  }
+}
+
+function atomPerSec() {
+  let ret = new Decimal(0)
+  for (i=0;i<player.buildingAmounts.length;i++) {
+    ret = ret.plus(player.buildingAmounts[i].times(player.buildingPowers[i]))
+  }
+  return ret
+}
+
+function buyBuilding(id) {
+  if (player.storyId<7) return;
+  id--
+  if (player.atom.gte(player.buildingCosts[id])) {
+    player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
+    player.atom = player.atom.sub(player.buildingCosts[id])
+    player.buildingCosts[id] = player.buildingCosts[id].times(player.buildingCostScales[id])
+  }
+}
+
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
+
+  player.atom = player.atom.plus(atomPerSec().times(diff).div(1000))
+
   if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
   if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
     player.storyId = 5
@@ -78,7 +113,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   }
   if (!player.inPrologue) {
     player.queueTime += diff*0.001
-    if (player.atomInQueue.equals(0)) {
+    if (player.atomInQueue.lt(1)) {
       player.queueTime = 0
     } else if (player.queueTime>=player.queueInterval) {
       let atomToAdd = Decimal.min(player.atomInQueue, Math.floor(player.queueTime/player.queueInterval))
@@ -86,11 +121,14 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
       player.atomInQueue = player.atomInQueue.sub(atomToAdd)
       player.atom = player.atom.plus(atomToAdd)
     }
+    checkMilestone()
   }
+
   updateElement("timeTillNextAtom", shortenMoney(player.queueInterval-player.queueTime))
   updateElement("atomcount", shortenMoney(player.inPrologue?prologueAtom:player.atom))
   updateElement("introstory", storyTexts[player.storyId])
   updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
+  updateElement("atomQueueCap", shortenMoney(player.queueCap))
   decideElementDisplay("genContainer", player.inPrologue)
   decideElementDisplay("storynext", player.storyId<4)
   decideElementDisplay("atomClickGain", !player.inPrologue)
