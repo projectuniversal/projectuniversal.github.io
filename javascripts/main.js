@@ -67,10 +67,14 @@ function addAtomIntoQueue() {
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
-  if (player.inPrologue && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
+  if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
   if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
     player.storyId = 5
+    prologueAtom = new Decimal("1e80")
     setTimeout(endPrologue,5000)
+  }
+  if (player.storyId == 5) {
+    prologueAtom = Decimal.pow10(prologueAtom.log10()-0.016*diff)
   }
   if (!player.inPrologue) {
     player.queueTime += diff*0.001
