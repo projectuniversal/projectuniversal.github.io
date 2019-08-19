@@ -96,11 +96,18 @@ function buyBuilding(id) {
   }
 }
 
+function updateBuildings() {
+    Array.from(getElement("buildings-table").rows).forEach((tr, id)) => {
+        if (id>0) {
+            updateElement(tr[1], `${shortenMoney(player.buildingPowers[id])} atom/s`)
+            updayeElement(tr[2], `${shortenMoney(player.buildingCosts[id])} Atoms`)
+        }
+    })
+}
+
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
-
-  player.atomInQueue = Decimal.min(player.queueCap, player.atomInQueue.plus(atomPerSec().times(diff).div(1000)))
 
   if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
   if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
@@ -123,7 +130,11 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     }
     checkMilestone()
   }
-
+  if (player.storyId>=7) {
+      updateBuildings()
+      player.atomInQueue = Decimal.min(player.queueCap, player.atomInQueue.plus(atomPerSec().times(diff).div(1000)))
+  }
+    
   updateElement("timeTillNextAtom", shortenMoney(player.queueInterval-player.queueTime))
   updateElement("atomcount", shortenMoney(player.inPrologue?prologueAtom:player.atom))
   updateElement("introstory", storyTexts[player.storyId])
@@ -132,5 +143,6 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   decideElementDisplay("genContainer", player.inPrologue)
   decideElementDisplay("storynext", player.storyId<4)
   decideElementDisplay("atomClickGain", !player.inPrologue)
+  decideElementDisplay("buildings-table", player.storyId>=7)
   player.lastUpdate = thisUpdate
 }
