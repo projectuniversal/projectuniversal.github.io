@@ -26,7 +26,7 @@ setOnclick("activategen", function() {
     getElement("activategen").innerHTML = "ACTIVATED"
     prologueGenActivated = true
 })
-setOnclick("atomClickGainBtn",takeAtomFromQueue)
+setOnclick("atomClickGainBtn",addAtomIntoQueue)
 
 function setOnclick(id,func) {
   getElement(id).onclick = func
@@ -59,13 +59,9 @@ function skipPrologue() {
   player.inPrologue = false
 }
 
-function takeAtomFromQueue() {
-  let takeAmount = new Decimal(1)
-  if (player.atomInQueue.gte(1)) {
-    let actualTakeAmount = Decimal.min(player.atomInQueue,takeAmount)
-    player.atomInQueue = player.atomInQueue.minus(actualTakeAmount)
-    player.atom = player.atom.plus(actualTakeAmount)
-  }
+function addAtomIntoQueue() {
+  let addAmount = Decimal.min(player.queueCap.sub(player.atomInQueue),new Decimal(1))
+  player.atomInQueue = player.atomInQueue.plus(addAmount)
 }
 
 function gameLoop(diff) { // 1 diff = 0.001 seconds
@@ -78,17 +74,16 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   }
   if (!player.inPrologue) {
     player.queueTime += diff*0.001
-    if (player.queueTime>=player.queueInterval) {
-      if (!player.atomInQueue.gte(player.queueCap)) {
-        let atomToAdd = Math.min(player.queueCap.minus(player.atomInQueue), Math.floor(player.queueTime/player.queueInterval))
-        player.queueTime -= player.queueInterval*atomToAdd
-        player.atomInQueue = player.atomInQueue.plus(atomToAdd)
-      } else {
-        player.queueTime = player.queueInterval
-      }
+    if (player.atomInQueue.equals(0)) {
+      player.queueTime = 0
+    } else if (player.queueTime>=player.queueInterval) {
+      let atomToAdd = Decimal.min(player.atomInQueue, Math.floor(player.queueTime/player.queueInterval))
+      player.queueTime -= player.queueInterval*atomToAdd
+      player.atomInQueue = player.atomInQueue.sub(atomToAdd)
+      player.atom = player.atom.plus(atomToAdd)
     }
   }
-  updateElement("timeTillNextQueue", shortenMoney(player.queueInterval-player.queueTime))
+  updateElement("timeTillNextAtom", shortenMoney(player.queueInterval-player.queueTime))
   updateElement("atomcount", shortenMoney(player.inPrologue?prologueAtom:player.atom))
   updateElement("introstory", storyTexts[player.storyId])
   updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
