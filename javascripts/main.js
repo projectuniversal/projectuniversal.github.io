@@ -99,8 +99,8 @@ function buyBuilding(id) {
 function updateBuildings() {
     Array.from(getElement("buildings-table").rows).forEach((tr, id) => {
         if (id>0) {
-            tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id-1])} atom/s`)
-            tr.cells[2].innerHTML = `${shortenMoney(player.buildingCosts[id-1])} Atoms`)
+            tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id-1])} atom/s`
+            tr.cells[2].innerHTML = `${shortenMoney(player.buildingCosts[id-1])} Atoms`
         }
     })
 }
