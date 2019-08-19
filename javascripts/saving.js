@@ -62,7 +62,7 @@ function loadGame(save, imported = false) {
         saveLists[2].forEach(function(value) {
             let arrayAccessCode = `save${generateArrayAccessCode(value)}`
             let arrayType = findArrayType(value)
-            if (arrayType != "String") eval(`save${generateArrayAccessCode(value)} = save${generateArrayAccessCode(value)}.map(x => ${getMapCode(arrayType)}`)
+            if (arrayType != "String") eval(`save${generateArrayAccessCode(value)} = save${generateArrayAccessCode(value)}.map(x => ${getMapCode(arrayType)})`)
         })
 
         window[playerVarName] = save
