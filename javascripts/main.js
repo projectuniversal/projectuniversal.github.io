@@ -123,7 +123,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     if (player.atomInQueue.lt(1)) {
       player.queueTime = 0
     } else if (player.queueTime>=player.queueInterval) {
-      let atomToAdd = Decimal.min(player.atomInQueue, Math.floor(player.queueTime/player.queueInterval))
+      let atomToAdd = Decimal.floor(Decimal.min(player.atomInQueue, player.queueTime/player.queueInterval))
       player.queueTime -= player.queueInterval*atomToAdd
       player.atomInQueue = player.atomInQueue.sub(atomToAdd)
       player.atom = player.atom.plus(atomToAdd)
