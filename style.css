@@ -18,7 +18,14 @@ body {
   bottom: 1vh;
   right: 1vh;
 }*/
+
 #buildings-table {
 	top: 0;
 	right: 0;
+}
+
+.table__buildings-table{
+  position: fixed!important;
+  text-align: center;
+  width: auto;
 }
