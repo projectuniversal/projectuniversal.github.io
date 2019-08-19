@@ -88,7 +88,6 @@ function atomPerSec() {
 
 function buyBuilding(id) {
   if (player.storyId<7) return;
-  id--
   if (player.atom.gte(player.buildingCosts[id])) {
     player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
     player.atom = player.atom.sub(player.buildingCosts[id])
@@ -97,7 +96,7 @@ function buyBuilding(id) {
 }
 
 function updateBuildings() {
-    Array.from(getElement("buildings-table").rows).forEach((tr, id)) => {
+    Array.from(getElement("buildings-table").rows).forEach((tr, id) => {
         if (id>0) {
             updateElement(tr[1], `${shortenMoney(player.buildingPowers[id])} atom/s`)
             updayeElement(tr[2], `${shortenMoney(player.buildingCosts[id])} Atoms`)
