@@ -3,7 +3,11 @@ function getDefaultPlayer() {
         lastUpdate: new Date().getTime(),
         inPrologue: true,
         atom: new Decimal(0),
-        storyId: 0
+        storyId: 0,
+        queueTime: 0,
+        queueInterval: 1,
+        atomInQueue: new Decimal(0),
+        queueCap: new Decimal(10)
     }
 }
 getElement = document.getElementById.bind(document)
@@ -14,14 +18,18 @@ let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
 let storyTexts = ["Intro speak","Tells player to turn on gen","Explosion in 5 secs","The Beginning"]
 
-getElement("storynext").onclick = function() {
+setOnclick("storynext", function() {
     player.storyId = Math.min(1,player.storyId+1)
-}
-
-getElement("activategen").onclick = function() {
+})
+setOnclick("activategen", function() {
     if (player.storyId < 1) return;
     getElement("activategen").innerHTML = "ACTIVATED"
     prologueGenActivated = true
+})
+setOnclick("atomClickGainBtn",takeAtomFromQueue)
+
+function setOnclick(id,func) {
+  getElement(id).onclick = func
 }
 
 function startInterval() {
@@ -46,6 +54,20 @@ function decideElementDisplay(id,bool) {
   getElement(id).style.display = bool?"":"none"
 }
 
+function skipPrologue() {
+  player.storyId=3
+  player.inPrologue = false
+}
+
+function takeAtomFromQueue() {
+  let takeAmount = new Decimal(1)
+  if (player.atomInQueue.gte(1)) {
+    let actualTakeAmount = Decimal.min(player.atomInQueue,takeAmount)
+    player.atomInQueue = player.atomInQueue.minus(actualTakeAmount)
+    player.atom = player.atom.plus(actualTakeAmount)
+  }
+}
+
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
@@ -54,9 +76,24 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     player.storyId = 2
     setTimeout(endPrologue,5000)
   }
+  if (!player.inPrologue) {
+    player.queueTime += diff*0.001
+    if (player.queueTime>=player.queueInterval) {
+      if (!player.atomInQueue.gte(player.queueCap)) {
+        let atomToAdd = Math.min(player.queueCap.minus(player.atomInQueue), Math.floor(player.queueTime/player.queueInterval))
+        player.queueTime -= player.queueInterval*atomToAdd
+        player.atomInQueue = player.atomInQueue.plus(atomToAdd)
+      } else {
+        player.queueTime = player.queueInterval
+      }
+    }
+  }
+  updateElement("timeTillNextQueue", shortenMoney(player.queueInterval-player.queueTime))
   updateElement("atomcount", shortenMoney(player.inPrologue?prologueAtom:player.atom))
   updateElement("introstory", storyTexts[player.storyId])
+  updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
   decideElementDisplay("genContainer", player.inPrologue)
   decideElementDisplay("storynext", player.storyId<1)
+  decideElementDisplay("atomClickGain", !player.inPrologue)
   player.lastUpdate = thisUpdate
 }
