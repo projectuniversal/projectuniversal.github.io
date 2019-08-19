@@ -16,13 +16,13 @@ let gameLoopIntervalId = 0
 let player = getDefaultPlayer()
 let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
-let storyTexts = ["Intro speak","Tells player to turn on gen","Explosion in 5 secs","The Beginning"]
+let storyTexts = ["Intro speak 1", "Intro speak 2", "Intro speak 3", "Intro speak 4", "Tells player to turn on gen","Explosion in 5 secs","The Beginning"]
 
 setOnclick("storynext", function() {
-    player.storyId = Math.min(1,player.storyId+1)
+    player.storyId = Math.min(4,player.storyId+1)
 })
 setOnclick("activategen", function() {
-    if (player.storyId < 1) return;
+    if (player.storyId < 4) return;
     getElement("activategen").innerHTML = "ACTIVATED"
     prologueGenActivated = true
 })
@@ -43,7 +43,7 @@ function startGame() {
 
 function endPrologue() {
   player.inPrologue = false
-  player.storyId = Math.min(3,player.storyId+1)
+  player.storyId = Math.min(6,player.storyId+1)
 }
 
 function updateElement(id,text) {
@@ -55,7 +55,7 @@ function decideElementDisplay(id,bool) {
 }
 
 function skipPrologue() {
-  player.storyId=3
+  player.storyId=6
   player.inPrologue = false
 }
 
@@ -68,8 +68,8 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
   if (player.inPrologue && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
-  if (player.storyId == 1 && prologueAtom.gte(new Decimal("1e80"))) {
-    player.storyId = 2
+  if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
+    player.storyId = 5
     setTimeout(endPrologue,5000)
   }
   if (!player.inPrologue) {
@@ -88,7 +88,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   updateElement("introstory", storyTexts[player.storyId])
   updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
   decideElementDisplay("genContainer", player.inPrologue)
-  decideElementDisplay("storynext", player.storyId<1)
+  decideElementDisplay("storynext", player.storyId<4)
   decideElementDisplay("atomClickGain", !player.inPrologue)
   player.lastUpdate = thisUpdate
 }
