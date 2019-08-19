@@ -20,7 +20,7 @@ let gameLoopIntervalId = 0
 let player = getDefaultPlayer()
 let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
-let storyTexts = ["Intro speak 1", "Intro speak 2", "Intro speak 3", "Intro speak 4", "Tells player to turn on gen","Explosion in 5 secs","The Beginning","Buildings unlocked"]
+let storyTexts = ["Your Universe was rapidly decaying.", "To combat this, your crew created a pocket dimension to escape to when necessary.", "Soon enough, you realize..", "you're taking part in the Universe's final moments.", "And it all starts with this generator.","SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in five seconds.","The Beginning","Buildings unlocked"]
 
 setOnclick("storynext", function() {
     player.storyId = Math.min(4,player.storyId+1)
