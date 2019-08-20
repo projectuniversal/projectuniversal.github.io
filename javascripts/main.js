@@ -122,7 +122,8 @@ function buyBuilding(id) {
 }
 
 function getBuildingState(id) {
-    if (getCurrentTier() < id-1) return "Locked"
+    id--
+    if (getCurrentTier() < id) return "Locked"
     if (player.atom.gte(Decimal.ceil(player.buildingCosts[id]))) return "Not enough Atoms"
     return "Buy"
 }
