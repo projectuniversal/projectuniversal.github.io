@@ -91,9 +91,9 @@ function atomPerSec() {
 function buyBuilding(id) {
   if (player.storyId<7) return;
   id--
-  if (player.atom.gte(player.buildingCosts[id])) {
+  if (player.atom.gte(Decimal.ceil(player.buildingCosts[id]))) {
     player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
-    player.atom = player.atom.sub(player.buildingCosts[id])
+    player.atom = player.atom.sub(Decimal.ceil(player.buildingCosts[id]))
     player.buildingCosts[id] = player.buildingCosts[id].times(player.buildingCostScales[id])
   }
 }
@@ -102,7 +102,7 @@ function updateBuildings() {
     Array.from(getElement("buildings-table").rows).forEach((tr, id) => {
         if (id>0) {
             tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id-1])} atom/s`
-            tr.cells[2].innerHTML = `${shortenMoney(player.buildingCosts[id-1])} Atoms`
+            tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id-1]))} Atoms`
         }
     })
 }
