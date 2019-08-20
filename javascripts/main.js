@@ -8,11 +8,11 @@ function getDefaultPlayer() {
         queueInterval: 1,
         atomInQueue: new Decimal(0),
         queueCap: new Decimal(10),
-        buildingAmounts: [new Decimal(0)],
-        buildingCosts: [new Decimal(20)],
-        buildingPowers: [new Decimal(0.2)],
-        buildingCostScales: [new Decimal(1.1)],
-        version: 1
+        buildingAmounts: [new Decimal(0), new Decimal(0)],
+        buildingCosts: [new Decimal(20), new Decimal(100)],
+        buildingPowers: [new Decimal(0.2), new Decimal(1)],
+        buildingCostScales: [new Decimal(1.1), new Decimal(1.2)],
+        version: 2
     }
 }
 getElement = document.getElementById.bind(document)
@@ -21,7 +21,15 @@ let gameLoopIntervalId = 0
 var player = getDefaultPlayer()
 let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
-let storyTexts = ["Your Universe was rapidly decaying.", "To combat this, your crew created a pocket dimension to escape to when necessary.", "Soon enough, you realize..", "you're taking part in the Universe's final moments.", "And it all starts with this generator.","SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in five seconds.","The Beginning","Buildings unlocked"]
+let storyTexts = ["Your Universe was rapidly decaying.",
+                  "To combat this, your crew created a pocket dimension to escape to when necessary.",
+                  "Soon enough, you realize..",
+                  "you're taking part in the Universe's final moments.",
+                  "And it all starts with this generator.",
+                  "SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in five seconds.",
+                  "The Beginning",
+                  "Buildings unlocked",
+                  "Tier 1 building unlocked (WIP)"]
 
 setOnclick("storynext", function() {
     player.storyId = Math.min(4,player.storyId+1)
@@ -76,6 +84,9 @@ function checkMilestone() {
     case 6:
       if (player.atom.gte(20)) player.storyId++
       break;
+    case 7:
+      if (player.atom.gte(100)) player.storyId++
+      break;
     default:
       return;
   }
@@ -106,6 +117,21 @@ function updateBuildings() {
             tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id-1]))} Atoms`
         }
     })
+}
+
+function resetValues(names) {
+    let reference = getDefaultPlayer()
+    names.forEach(function(name) {
+        eval(`player.${name} = reference.${name}`) // Familiar?
+    })
+}
+
+function refreshBuildings() {
+    resetValues(["buildingCosts","buildingPowers","buildingCostScales"])
+    for (let i=0;i<player.buildingCosts;i++) {
+        if (typeof player.buildingAmounts[i] != "object") player.buildingAmounts = new Decimal(0)
+        else player.buildingsCosts[i] = player.buildingCosts[i].times(Decimal.pow(player.buildingCostScales[i],player.buildingAmounts[i]))
+    }
 }
 
 function gameLoop(diff) { // 1 diff = 0.001 seconds
