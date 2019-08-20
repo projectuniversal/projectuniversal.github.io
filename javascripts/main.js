@@ -121,11 +121,18 @@ function buyBuilding(id) {
   }
 }
 
+function getBuildingState(id) {
+    if (getCurrentTier() < id) return "Locked"
+    if (player.atom.gte(Decimal.ceil(player.buildingCosts[id]))) return "Not enough Atoms"
+    return "Buy"
+}
+
 function updateBuildings() {
     Array.from(getElement("buildings-table").rows).forEach((tr, id) => {
         if (id>0) {
             tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id-1])} atom/s`
             tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id-1]))} Atoms`
+            tr.cells[3].innerHTML = getBuildingState(id)
         }
     })
 }
