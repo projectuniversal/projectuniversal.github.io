@@ -133,7 +133,7 @@ function updateBuildings() {
         if (id>0) {
             tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id-1])} atom/s`
             tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id-1]))} Atoms`
-            tr.cells[3].innerHTML = `<button type="button" onclick="buyBuilding(${id})">${getBuildingState(id)}</button>`
+            tr.cells[3].childNodes[0].innerHTML = getBuildingState(id)
         }
     })
 }
