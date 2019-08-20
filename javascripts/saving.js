@@ -5,6 +5,7 @@ let saveName = "PUSave"
 let initPlayerFunctionName = "getDefaultPlayer"
 let playerVarName = "player" // DO NOT USE THE WORD "SAVE"
 let importDangerAlertText = "Your imported save seems to be missing some values, which means importing this save might be destructive, if you have made a backup of your current save and are sure about importing this save please press OK, if not, press cancel and the save will not be imported."
+let versionTagName = "version"
 let arrayTypes = { // For EACH array in your player variable, put a key/value to define its type like I did below
   buildingAmounts: "Decimal",
   buildingCosts: "Decimal",
@@ -26,6 +27,7 @@ function onImportSuccess() {
 
 function onLoad() { // Put your savefile updating codes here
     if (player.version === null) player.version = 1
+    refreshBuildings()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
 
@@ -71,6 +73,7 @@ function loadGame(save, imported = false) {
 
         window[playerVarName] = save
         onLoad()
+        eval(`save${generateArrayAccessCode(versionTagName)} = reference${generateArrayAccessCode(versionTagName)}`) 
         if (imported) onImportSuccess()
     } catch (err) {
         if (imported) {
