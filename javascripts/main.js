@@ -128,7 +128,7 @@ function resetValues(names) {
 
 function refreshBuildings() {
     resetValues(["buildingCosts","buildingPowers","buildingCostScales"])
-    for (let i=0;i<player.buildingCosts;i++) {
+    for (let i=0;i<player.buildingCosts.length;i++) {
         if (typeof player.buildingAmounts[i] != "object") player.buildingAmounts = new Decimal(0)
         else player.buildingsCosts[i] = player.buildingCosts[i].times(Decimal.pow(player.buildingCostScales[i],player.buildingAmounts[i]))
     }
