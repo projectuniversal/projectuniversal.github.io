@@ -23,6 +23,10 @@ function onLoadError() {
 function onImportSuccess() {
     alert("Save imported successfully.")
 }
+
+function onLoad() { // Put your savefile updating codes here
+    if (player.version === null) player.version = 1
+}
 // Only change things above to fit your game UNLESS you know what you're doing
 
 Array.prototype.diff = function(a) {
@@ -51,7 +55,7 @@ function loadGame(save, imported = false) {
         }
 
         missingItem.forEach(function(value) {
-            eval(`save${generateArrayAccessCode(value)} = reference${generateArrayAccessCode(value)}`) // No one will exploit their browser with localStorage right
+            if (value != versionTagName) eval(`save${generateArrayAccessCode(value)} = reference${generateArrayAccessCode(value)}`) // No one will exploit their browser with localStorage right
         })
 
         let decimalList = saveLists[1].diff(refLists[1])
@@ -66,6 +70,7 @@ function loadGame(save, imported = false) {
         })
 
         window[playerVarName] = save
+        onLoad()
         if (imported) onImportSuccess()
     } catch (err) {
         if (imported) {
