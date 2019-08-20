@@ -136,12 +136,14 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     }
     checkMilestone()
   }
-    
+
   updateElement("timeTillNextAtom", shortenMoney(player.queueInterval-player.queueTime))
   updateElement("atomcount", shortenMoney(player.inPrologue?prologueAtom:player.atom))
   updateElement("introstory", storyTexts[player.storyId])
   updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
   updateElement("atomQueueCap", shortenMoney(player.queueCap))
+  if (player.storyId == 4 || player.storyId == 5) $("#generator").fadeIn(3000)
+  else decideElementDisplay("generator",player.storyId>5)
   decideElementDisplay("genContainer", player.inPrologue)
   decideElementDisplay("storynext", player.storyId<4)
   decideElementDisplay("atomClickGain", !player.inPrologue)
