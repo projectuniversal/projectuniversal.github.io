@@ -29,7 +29,7 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in five seconds.",
                   "The Beginning",
                   "Buildings unlocked",
-                  "Tier 1 building unlocked (WIP)"]
+                  "Tier 1 unlocked (WIP)"]
 
 setOnclick("storynext", function() {
     player.storyId = Math.min(4,player.storyId+1)
