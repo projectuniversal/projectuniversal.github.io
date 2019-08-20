@@ -100,9 +100,20 @@ function atomPerSec() {
   return ret
 }
 
+function getCurrentTier() {
+    switch (player.storyId) {
+        case 7:
+            return 0;
+        case 8:
+            return 1;
+        default:
+            return -1;
+    }
+}
+
 function buyBuilding(id) {
-  if (player.storyId<7) return;
   id--
+  if (getCurrentTier()<id) return;
   if (player.atom.gte(Decimal.ceil(player.buildingCosts[id]))) {
     player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
     player.atom = player.atom.sub(Decimal.ceil(player.buildingCosts[id]))
