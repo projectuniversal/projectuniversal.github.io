@@ -11,7 +11,8 @@ function getDefaultPlayer() {
         buildingAmounts: [new Decimal(0)],
         buildingCosts: [new Decimal(20)],
         buildingPowers: [new Decimal(0.2)],
-        buildingCostScales: [new Decimal(1.1)]
+        buildingCostScales: [new Decimal(1.1)],
+        version: 1
     }
 }
 getElement = document.getElementById.bind(document)
