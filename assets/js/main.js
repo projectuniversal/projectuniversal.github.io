@@ -100,20 +100,9 @@ function atomPerSec() {
   return ret
 }
 
-function getCurrentTier() {
-    switch (player.storyId) {
-        case 7:
-            return 0;
-        case 8:
-            return 1;
-        default:
-            return -1;
-    }
-}
-
 function buyBuilding(id) {
+  if (player.storyId<7) return;
   id--
-  if (getCurrentTier()<id) return;
   if (player.atom.gte(Decimal.ceil(player.buildingCosts[id]))) {
     player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
     player.atom = player.atom.sub(Decimal.ceil(player.buildingCosts[id]))
@@ -121,19 +110,11 @@ function buyBuilding(id) {
   }
 }
 
-function getBuildingState(id) {
-    id--
-    if (getCurrentTier() < id) return "Locked"
-    if (player.atom.lt(Decimal.ceil(player.buildingCosts[id]))) return "Not enough Atoms"
-    return "Buy"
-}
-
 function updateBuildings() {
     Array.from(getElement("buildings-table").rows).forEach((tr, id) => {
         if (id>0) {
             tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id-1])} atom/s`
             tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id-1]))} Atoms`
-            tr.cells[3].childNodes[0].innerHTML = getBuildingState(id)
         }
     })
 }
@@ -148,8 +129,8 @@ function resetValues(names) {
 function refreshBuildings() {
     resetValues(["buildingCosts","buildingPowers","buildingCostScales"])
     for (let i=0;i<player.buildingCosts.length;i++) {
-        if (typeof player.buildingAmounts[i] != "object") player.buildingAmounts[i] = new Decimal(0)
-        else player.buildingCosts[i] = player.buildingCosts[i].times(Decimal.pow(player.buildingCostScales[i],player.buildingAmounts[i]))
+        if (typeof player.buildingAmounts[i] != "object") player.buildingAmounts = new Decimal(0)
+        else player.buildingsCosts[i] = player.buildingCosts[i].times(Decimal.pow(player.buildingCostScales[i],player.buildingAmounts[i]))
     }
 }
 

@@ -1,74 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Project Universal</title>
+<html style="height: 100%;">
 
-		<!-- Bootstrap -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		<link rel="stylesheet" type="text/css" href="style.css" />
-	</head>
-	<body onload="startGame();">
-		<div class="container-fluid h-100" id="story-container">
-			<div class="row align-items-center h-100">
-				<div class="col mx-auto" id="story">
-					<div class="text-center" id="story-text">
-						<span id="introstory">story text</span>
-						<button type="button" id="storynext">Click to continue..</button>
-					</div>
-					<div class="text-center" id="atomClickGain" style="display:none">
-					  <span id="atomQueue">You have <span id="atomQueueAmount">0</span>/<span id="atomQueueCap">10</span> atoms in queue, next atom extraction in <span id="timeTillNextAtom">1</span> seconds</span>
-						<button type="button" id="atomClickGainBtn">Create an atom</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="container-fluid" id="generator" style="display:none">
-			<div class="row justify-content-between">
-				<div class="col-4">
-					<div class="well">
-						<div>You have <span id="atomcount">9e79</span> Atoms</div>
-					</div>
-				</div>
-				<div class="col-2">
-					<div class="well pull-right" id="genContainer">
-						<div id="gentext">Generator</div>
-						<button id="activategen" type="button">Activate</button>
-					</div>
-				</div>
-		</div>
-		<div id="buildingtable" class="position-relative">
-			<table id="buildings-table" class="table__buildings-table table" style="display:none">
-				<tr>
-					<th>Name</th>
-					<th>Effectiveness (to queue)</th>
-					<th>Price</th>
-					<th></th>
-				</tr>
-				<tr>
-					<td>Automatic Constructor</td>
-					<td>0.2 atoms/s</td>
-					<td>20 Atoms</td>
-					<td><button type="button" onclick="buyBuilding(1)">Buy</button></td>
-				</tr>
-				<tr>
-					<td>Place Holder</td>
-					<td>1 atom/s</td>
-					<td>100 atoms</td>
-					<td><button type="button" onclick="buyBuilding(2)">Buy</button></td>
-			</table>
-		</div>
-		<script src="javascripts/break_infinity.min.js"></script>
-		<script src="javascripts/format.js"></script>
-	        <script src="javascripts/saving.js"></script>
-		<script src="javascripts/main.js"></script>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Project Universal</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
 
-		<!-- vv Load scripts here! vv -->
+<body style="height: 100%;">
+    <nav class="navbar navbar-light navbar-expand-md" style="background-color: #f8f4f4;">
+        <div class="container-fluid"><a class="navbar-brand" href="#">Project Universal</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Discord</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="#">Reddit</a></li>
+                    <li class="nav-item" role="presentation"></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="margin: 0px;"><span style="font-size: 25px;margin: 19px;">Tier 1 unlocked! (WIP)</span></div>
+    <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary" type="button" style="margin: -1px;">Click to Continue</button></div>
+    <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;">0 atoms</span></div>
+    <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);"><span style="color: rgb(141,150,157);">0 in queue</span></div>
+    <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;">Create Atom</button></div>
+    <ul class="nav nav-tabs">
+        <li class="nav-item"><a class="nav-link active" href="#">Buildings</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Upgrades</a></li>
+        <li class="nav-item"></li>
+    </ul>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div class="container" style="margin: 0px 0px;">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Name</th>
+                        <th style="width: 25%;">Price</th>
+                        <th style="width: 25%;">Effectiveness</th>
+                        <th style="width: 25%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="align-middle" style="height: 60px;">Atom Constructor</td>
+                        <td class="align-middle" style="height: 60px;">20 atoms</td>
+                        <td class="align-middle" style="height: 60px;">0.2 atoms/s</td>
+                        <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button">Build</button></td>
+                    </tr>
+                    <tr>
+                        <td class="align-middle" style="height: 60px;">Place Holder</td>
+                        <td class="align-middle" style="height: 60px;">100 atoms</td>
+                        <td class="align-middle" style="height: 60px;">1 atom/s</td>
+                        <td class="align-middle" style="height: 60px;"><button class="btn btn-secondary align-middle" type="button">Build</button></td>
+                    </tr>
+                    <tr></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-animation.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.1.1/aos.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
 
-		<!-- Bootstrap -->
-
-		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	</body>
 </html>
