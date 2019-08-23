@@ -17,6 +17,7 @@ function getDefaultPlayer() {
 }
 getElement = document.getElementById.bind(document)
 
+let diffMultiplier = 1 // The infamous cheating variable from Nyan Cat
 let gameLoopIntervalId = 0
 var player = getDefaultPlayer()
 let prologueAtom = new Decimal("9e79")
@@ -112,7 +113,6 @@ function getCurrentTier() {
 }
 
 function buyBuilding(id) {
-  id--
   if (getCurrentTier()<id) return;
   if (player.atom.gte(Decimal.ceil(player.buildingCosts[id]))) {
     player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
@@ -122,18 +122,31 @@ function buyBuilding(id) {
 }
 
 function getBuildingState(id) {
-    id--
     if (getCurrentTier() < id) return "Locked"
-    if (player.atom.lt(Decimal.ceil(player.buildingCosts[id]))) return "Not enough Atoms"
+    if (player.atom.lt(Decimal.ceil(player.buildingCosts[id]))) return "Can't afford"
     return "Buy"
 }
 
 function updateBuildings() {
-    Array.from(getElement("buildings-table").rows).forEach((tr, id) => {
-        if (id>0) {
-            tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id-1])} atom/s`
-            tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id-1]))} Atoms`
-            tr.cells[3].childNodes[0].innerHTML = getBuildingState(id)
+    Array.from(getElement("buildingRows").rows).forEach((tr, id) => {
+        tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id])} atom/s`
+        tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id]))} Atoms`
+        let buyButton = tr.cells[3].childNodes[0]
+        let buildingState = getBuildingState(id)
+        buyButton.innerHTML = getBuildingState(id)
+        switch (buildingState) {
+            case "Locked":
+                buyButton.classList.remove("btn-success","btn-danger")
+                buyButton.classList.add("btn-secondary")
+                break;
+            case "Can't afford":
+                buyButton.classList.remove("btn-success","btn-secondary")
+                buyButton.classList.add("btn-danger")
+                break;
+            case "Buy":
+                buyButton.classList.remove("btn-danger","btn-secondary")
+                buyButton.classList.add("btn-success")
+                break;
         }
     })
 }
@@ -156,6 +169,7 @@ function refreshBuildings() {
 function gameLoop(diff) { // 1 diff = 0.001 seconds
   var thisUpdate = new Date().getTime()
   if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
+  diff *= diffMultiplier
 
   if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
   if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
@@ -195,6 +209,6 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   decideElementDisplay("atomClickGain", !player.inPrologue)
   decideElementDisplay("buildingsTable", player.storyId>=7)
   decideElementDisplay("buildingsTabBtn", player.storyId>=7)
-  decideElementDisplay("upgradesTabBtn", player.storyId>=8)
+  decideElementDisplay("upgradesTabBtn", (player.storyId>=8)&&false)
   player.lastUpdate = thisUpdate
 }
