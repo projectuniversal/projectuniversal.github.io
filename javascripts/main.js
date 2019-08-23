@@ -81,7 +81,7 @@ function startGame() {
 function endPrologue() {
   player.inPrologue = false
   player.storyId = Math.min(6,player.storyId+1)
-  updateTab("buildings")
+  changeTab("buildings")
 }
 
 function updateElement(id,text) {
