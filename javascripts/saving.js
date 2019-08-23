@@ -30,7 +30,6 @@ function onLoad() { // Put your savefile updating codes here
     player.inPrologue = player.storyId<6
     updateTab(player.inPrologue?"generator":"buildings")
     refreshBuildings()
-    updateTabDisplay()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
 
