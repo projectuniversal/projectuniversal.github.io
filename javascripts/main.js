@@ -24,10 +24,10 @@ let prologueAtom = new Decimal("9e79")
 let prologueGenActivated = false
 let storyTexts = ["Your Universe was rapidly decaying.",
                   "To combat this, your crew created a pocket dimension to escape to when necessary.",
-                  "Soon enough, you realize..",
-                  "you're taking part in the Universe's final moments.",
+                  "But soon enough, you realize..",
+                  "You're taking part in the Universe's final moments.",
                   "And it all starts with this generator.",
-                  "SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in five seconds.",
+                  "SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in estimated ten seconds.",
                   "The Beginning",
                   "Buildings unlocked",
                   "Tier 1 unlocked (WIP)"]
@@ -36,11 +36,11 @@ let currentTab = "buildings"
 setOnclick("storyNext", function() {
     player.storyId = Math.min(4,player.storyId+1)
 })
-/*setOnclick("activategen", function() {
+setOnclick("genActivateBtn", function() {
     if (player.storyId < 4) return;
-    getElement("activategen").innerHTML = "ACTIVATED"
+    updateElement("genActivateBtn", "ACTIVATED")
     prologueGenActivated = true
-})*/
+})
 setOnclick("atomClickGain",addAtomIntoQueue)
 
 function setOnclick(id,func) {
@@ -97,7 +97,7 @@ function changeTab(tabName) {
 }
 
 function updateTabDisplay() {
-    let existingTabNames = ["buildings","upgrades","options"]
+    let existingTabNames = ["generator","buildings","upgrades","options"]
     existingTabNames.forEach(function(name) {
         let toDisplay = name==currentTab && player.storyId > 6
         decideElementDisplay(`${name}Tab`, toDisplay)
@@ -213,10 +213,10 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
     player.storyId = 5
     prologueAtom = new Decimal("1e80")
-    setTimeout(endPrologue,5000)
   }
   if (player.storyId == 5) {
-    prologueAtom = Decimal.pow10(prologueAtom.log10()-0.016*diff)
+    if (prologueAtom.lte(0)) endPrologue()
+    prologueAtom = Decimal.pow10(prologueAtom.log10()-0.008*diff)
   }
   if (player.storyId>=7) {
       updateBuildings()
@@ -240,12 +240,10 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   updateElement("storyDisplay", storyTexts[player.storyId])
   updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
   updateElement("atomQueueCap", shortenMoney(player.queueCap))
-  /*if (player.storyId == 4 || player.storyId == 5) $("#generator").fadeIn(3000)
-  else decideElementDisplay("generator",player.storyId>5)
-  decideElementDisplay("genContainer", player.inPrologue)*/
-  decideElementDisplay("tabBtnContainer", player.storyId>=7)
+  decideElementDisplay("tabBtnContainer", player.storyId>4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomClickGain", !player.inPrologue)
+  decideElementDisplay("generatorTabBtn", player.storyId>4 && player.inPrologue)
   decideElementDisplay("buildingsTabBtn", player.storyId>=7)
   decideElementDisplay("upgradesTabBtn", (player.storyId>=8)&&false)
   player.lastUpdate = thisUpdate
