@@ -33,7 +33,8 @@
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);"><span style="color: rgb(141,150,157);">There are <span id="atomQueueAmount">0</span>/<span id="atomQueueCap">10</span> Atoms in queue, next Atom extraction in <span id="timeTillNextAtom">1</span> seconds</span></div>
         <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="atomClickGain">Create Atom</button></div>
         <ul class="nav nav-tabs" id="tabBtnContainer">
-            <li class="nav-item" id="buildingsTabBtn"><a class="nav-link active" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
+            <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
+            <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
             <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
             <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
         </ul>
@@ -45,7 +46,11 @@
                 <tbody></tbody>
             </table>
         </div>
-        <div class="container" style="margin: 0px 0px;" id="buildingsTab">
+        <div class="container" style="margin: 0px 0px;" id="generatorTab" style="display:none">
+            <div style="font-size: 25px;margin: 19px;">Generator</div>
+            <button class="btn btn-danger" type="button" id="genActivateBtn">Activate (NO TURNBACK)</button>
+        </div>
+        <div class="container" style="margin: 0px 0px;" id="buildingsTab" style="display:none">
             <div class="table-responsive">
                 <table class="table">
                     <thead>
