@@ -27,7 +27,6 @@ function onImportSuccess() {
 
 function onLoad() { // Put your savefile updating codes here
     if (player.version === null) player.version = 1
-    skipPrologue()
     refreshBuildings()
     updateTabDisplay()
 }
