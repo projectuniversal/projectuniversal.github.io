@@ -27,6 +27,7 @@ function onImportSuccess() {
 
 function onLoad() { // Put your savefile updating codes here
     if (player.version === null) player.version = 1
+    player.storyId = Math.max(6,player.storyId)
     refreshBuildings()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
@@ -73,7 +74,7 @@ function loadGame(save, imported = false) {
 
         window[playerVarName] = save
         onLoad()
-        eval(`save${generateArrayAccessCode(versionTagName)} = reference${generateArrayAccessCode(versionTagName)}`) 
+        eval(`save${generateArrayAccessCode(versionTagName)} = reference${generateArrayAccessCode(versionTagName)}`)
         if (imported) onImportSuccess()
     } catch (err) {
         if (imported) {
