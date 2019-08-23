@@ -66,7 +66,7 @@ function hardReset() {
             player = getDefaultPlayer()
             saveGame()
             onLoad()
-            changeTab("buildings")
+            changeTab("generator")
         }
     }
 }
@@ -81,6 +81,7 @@ function startGame() {
 function endPrologue() {
   player.inPrologue = false
   player.storyId = Math.min(6,player.storyId+1)
+  updateTab("buildings")
 }
 
 function updateElement(id,text) {
@@ -99,7 +100,7 @@ function changeTab(tabName) {
 function updateTabDisplay() {
     let existingTabNames = ["generator","buildings","upgrades","options"]
     existingTabNames.forEach(function(name) {
-        let toDisplay = name==currentTab && player.storyId > 6
+        let toDisplay = name==currentTab && (!player.inPrologue||name=="generator")
         decideElementDisplay(`${name}Tab`, toDisplay)
         if (toDisplay) getElement(`${name}TabBtn`).classList.add("active")
         else getElement(`${name}TabBtn`).classList.remove("active")
@@ -242,7 +243,8 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   updateElement("atomQueueCap", shortenMoney(player.queueCap))
   decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
-  decideElementDisplay("atomClickGain", player.storyId>=6)
+  decideElementDisplay("atomCountContainer", player.storyId>=6)
+  decideElementDisplay("atomClickGainContainer", player.storyId>=6)
   decideElementDisplay("generatorTabBtn", player.storyId>=4 && player.inPrologue)
   decideElementDisplay("buildingsTabBtn", player.storyId>=7)
   decideElementDisplay("upgradesTabBtn", (player.storyId>=8)&&false)
