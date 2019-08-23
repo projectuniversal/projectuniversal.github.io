@@ -51,6 +51,26 @@ function startInterval() {
   gameLoopIntervalId = setInterval(gameLoop, 10)
 }
 
+function exportGame() {
+    copyStringToClipboard(btoa(JSON.stringify(player)))
+    alert("Exported to clipboard")
+}
+
+function importGame() {
+    loadGame(prompt("Please paste your exported save below:"),true)
+}
+
+function hardReset() {
+    if (confirm("Are you sure about reset ALL of your progress?")) {
+        if (confirm("Do you REALLY sure? This is the LAST confirmation!")) {
+            player = getDefaultPlayer()
+            saveGame()
+            onLoad()
+            changeTab("buildings")
+        }
+    }
+}
+
 function startGame() {
   let savefile = localStorage.getItem(saveName)
   if (!(savefile === null)) loadGame(savefile)
@@ -79,7 +99,7 @@ function changeTab(tabName) {
 function updateTabDisplay() {
     let existingTabNames = ["buildings","upgrades","options"]
     existingTabNames.forEach(function(name) {
-        let toDisplay = name==currentTab
+        let toDisplay = name==currentTab && player.storyId > 6
         decideElementDisplay(`${name}Tab`, toDisplay)
         if (toDisplay) getElement(`${name}TabBtn`).classList.add("active")
         else getElement(`${name}TabBtn`).classList.remove("active")
@@ -87,7 +107,7 @@ function updateTabDisplay() {
 }
 
 function skipPrologue() {
-  player.storyId=6
+  player.storyId = Math.max(6, player.storyId)
   player.inPrologue = false
 }
 
@@ -100,6 +120,7 @@ function checkMilestone() {
   switch (player.storyId) {
     case 6:
       if (player.atom.gte(20)) player.storyId++
+      updateTabDisplay()
       break;
     case 7:
       if (player.atom.gte(100)) player.storyId++

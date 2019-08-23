@@ -27,7 +27,7 @@ function onImportSuccess() {
 
 function onLoad() { // Put your savefile updating codes here
     if (player.version === null) player.version = 1
-    player.storyId = Math.max(6,player.storyId)
+    skipPrologue()
     refreshBuildings()
     updateTabDisplay()
 }
