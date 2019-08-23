@@ -66,8 +66,7 @@ function hardReset() {
         if (confirm("Do you REALLY sure? This is the LAST confirmation!")) {
             player = getDefaultPlayer()
             saveGame()
-            onLoad()
-            changeTab("generator")
+            location.reload()
         }
     }
 }
