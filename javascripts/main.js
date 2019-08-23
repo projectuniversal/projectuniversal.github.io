@@ -35,6 +35,7 @@ let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
     player.storyId = Math.min(4,player.storyId+1)
+    updateTabDisplay()
 })
 setOnclick("genActivateBtn", function() {
     if (player.storyId < 4) return;
