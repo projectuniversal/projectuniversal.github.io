@@ -31,15 +31,15 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Buildings unlocked",
                   "Tier 1 unlocked (WIP)"]
 
-setOnclick("storynext", function() {
+setOnclick("storyNext", function() {
     player.storyId = Math.min(4,player.storyId+1)
 })
-setOnclick("activategen", function() {
+/*setOnclick("activategen", function() {
     if (player.storyId < 4) return;
     getElement("activategen").innerHTML = "ACTIVATED"
     prologueGenActivated = true
-})
-setOnclick("atomClickGainBtn",addAtomIntoQueue)
+})*/
+setOnclick("atomClickGain",addAtomIntoQueue)
 
 function setOnclick(id,func) {
   getElement(id).onclick = func
@@ -184,15 +184,17 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   }
 
   updateElement("timeTillNextAtom", shortenMoney(player.queueInterval-player.queueTime))
-  updateElement("atomcount", shortenMoney(player.inPrologue?prologueAtom:player.atom))
-  updateElement("introstory", storyTexts[player.storyId])
+  updateElement("atomCount", `You have ${shortenMoney(player.inPrologue?prologueAtom:player.atom)} atoms`)
+  updateElement("storyDisplay", storyTexts[player.storyId])
   updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
   updateElement("atomQueueCap", shortenMoney(player.queueCap))
-  if (player.storyId == 4 || player.storyId == 5) $("#generator").fadeIn(3000)
+  /*if (player.storyId == 4 || player.storyId == 5) $("#generator").fadeIn(3000)
   else decideElementDisplay("generator",player.storyId>5)
-  decideElementDisplay("genContainer", player.inPrologue)
-  decideElementDisplay("storynext", player.storyId<4)
+  decideElementDisplay("genContainer", player.inPrologue)*/
+  decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomClickGain", !player.inPrologue)
-  decideElementDisplay("buildings-table", player.storyId>=7)
+  decideElementDisplay("buildingsTable", player.storyId>=7)
+  decideElementDisplay("buildingsTabBtn", player.storyId>=7)
+  decideElementDisplay("upgradesTabBtn", player.storyId>=8)
   player.lastUpdate = thisUpdate
 }
