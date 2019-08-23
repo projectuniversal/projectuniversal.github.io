@@ -31,6 +31,7 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "The Beginning",
                   "Buildings unlocked",
                   "Tier 1 unlocked (WIP)"]
+let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
     player.storyId = Math.min(4,player.storyId+1)
@@ -68,6 +69,21 @@ function updateElement(id,text) {
 
 function decideElementDisplay(id,bool) {
   getElement(id).style.display = bool?"":"none"
+}
+
+function changeTab(tabName) {
+    currentTab = tabName
+    updateTabDisplay()
+}
+
+function updateTabDisplay() {
+    let existingTabNames = ["buildings","upgrades","options"]
+    existingTabNames.forEach(function(name) {
+        let toDisplay = name==currentTab
+        decideElementDisplay(`${name}Tab`, toDisplay)
+        if (toDisplay) getElement(`${name}TabBtn`).classList.add("active")
+        else getElement(`${name}TabBtn`).classList.remove("active")
+    })
 }
 
 function skipPrologue() {
@@ -205,9 +221,9 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   /*if (player.storyId == 4 || player.storyId == 5) $("#generator").fadeIn(3000)
   else decideElementDisplay("generator",player.storyId>5)
   decideElementDisplay("genContainer", player.inPrologue)*/
+  decideElementDisplay("tabBtnContainer", player.storyId>=7)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomClickGain", !player.inPrologue)
-  decideElementDisplay("buildingsTable", player.storyId>=7)
   decideElementDisplay("buildingsTabBtn", player.storyId>=7)
   decideElementDisplay("upgradesTabBtn", (player.storyId>=8)&&false)
   player.lastUpdate = thisUpdate

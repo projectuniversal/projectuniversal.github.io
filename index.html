@@ -32,10 +32,10 @@
         <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;" id="atomCount">You have 0 atoms</span></div>
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);"><span style="color: rgb(141,150,157);">There are <span id="atomQueueAmount">0</span>/<span id="atomQueueCap">10</span> Atoms in queue, next Atom extraction in <span id="timeTillNextAtom">1</span> seconds</span></div>
         <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="atomClickGain">Create Atom</button></div>
-        <ul class="nav nav-tabs">
-            <li class="nav-item" id="buildingsTabBtn"><a class="nav-link active" href="#">Buildings</a></li>
-            <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" href="#">Upgrades</a></li>
-            <li class="nav-item"></li>
+        <ul class="nav nav-tabs" id="tabBtnContainer">
+            <li class="nav-item" id="buildingsTabBtn"><a class="nav-link active" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
+            <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
+            <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
         </ul>
         <div class="table-responsive">
             <table class="table">
@@ -45,7 +45,7 @@
                 <tbody></tbody>
             </table>
         </div>
-        <div class="container" style="margin: 0px 0px;" id="buildingsTable">
+        <div class="container" style="margin: 0px 0px;" id="buildingsTab">
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -72,6 +72,12 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="container" style="margin: 0px 0px;" id="upgradesTab" style="diplay:none">
+            <span style="font-size: 25px;margin: 19px;">This feature is still under development.</span>
+        </div>
+        <div class="container" style="margin: 0px 0px;" id="optionsTab" style="diplay:none">
+            <span style="font-size: 25px;margin: 19px;">This feature is still under development.</span>
         </div>
         <script src="javascripts/break_infinity.min.js"></script>
         <script src="javascripts/format.js"></script>

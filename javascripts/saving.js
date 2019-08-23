@@ -29,6 +29,7 @@ function onLoad() { // Put your savefile updating codes here
     if (player.version === null) player.version = 1
     player.storyId = Math.max(6,player.storyId)
     refreshBuildings()
+    updateTabDisplay()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
 
