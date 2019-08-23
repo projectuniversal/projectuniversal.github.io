@@ -217,7 +217,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     prologueAtom = new Decimal("1e80")
   }
   if (player.storyId == 5) {
-    if (prologueAtom.lte(0)) endPrologue()
+    if (prologueAtom.lte(0.5)) endPrologue()
     prologueAtom = Decimal.pow10(prologueAtom.log10()-0.008*diff)
   }
   if (player.storyId>=7) {
