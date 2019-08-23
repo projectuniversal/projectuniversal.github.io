@@ -240,10 +240,10 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   updateElement("storyDisplay", storyTexts[player.storyId])
   updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
   updateElement("atomQueueCap", shortenMoney(player.queueCap))
-  decideElementDisplay("tabBtnContainer", player.storyId>4)
+  decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
-  decideElementDisplay("atomClickGain", !player.inPrologue)
-  decideElementDisplay("generatorTabBtn", player.storyId>4 && player.inPrologue)
+  decideElementDisplay("atomClickGain", player.storyId>=6)
+  decideElementDisplay("generatorTabBtn", player.storyId>=4 && player.inPrologue)
   decideElementDisplay("buildingsTabBtn", player.storyId>=7)
   decideElementDisplay("upgradesTabBtn", (player.storyId>=8)&&false)
   player.lastUpdate = thisUpdate
