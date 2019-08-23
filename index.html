@@ -77,9 +77,13 @@
             <span style="font-size: 25px;margin: 19px;">This feature is still under development.</span>
         </div>
         <div class="container" style="margin: 0px 0px;" id="optionsTab" style="diplay:none">
-            <span style="font-size: 25px;margin: 19px;">This feature is still under development.</span>
+            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="saveGame()">Save now</button>
+            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="exportGame()">Export</button>
+            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="importGame()">Import</button>
+            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="hardReset()">HARD RESET</button>
         </div>
         <script src="javascripts/break_infinity.min.js"></script>
+        <script src="javascripts/clipboard.js"></script>
         <script src="javascripts/format.js"></script>
         <script src="javascripts/saving.js"></script>
         <script src="javascripts/main.js"></script>
