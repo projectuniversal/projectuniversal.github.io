@@ -100,7 +100,7 @@ function changeTab(tabName) {
 function updateTabDisplay() {
     let existingTabNames = ["generator","buildings","upgrades","options"]
     existingTabNames.forEach(function(name) {
-        let toDisplay = name==currentTab && (!player.inPrologue||name=="generator")
+        let toDisplay = name==currentTab && (!player.inPrologue||name=="generator"||name=="options")
         decideElementDisplay(`${name}Tab`, toDisplay)
         if (toDisplay) getElement(`${name}TabBtn`).classList.add("active")
         else getElement(`${name}TabBtn`).classList.remove("active")
