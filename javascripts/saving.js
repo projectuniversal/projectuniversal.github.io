@@ -27,8 +27,8 @@ function onImportSuccess() {
 
 function onLoad() { // Put your savefile updating codes here
     if (player.version === null) player.version = 1
-    player.inPrologue = player.storyId<6
-    changeTab(player.inPrologue?"generator":"buildings")
+    if (player.version < 3) delete player.inPrologue
+    changeTab(player.storyId<6?"generator":"buildings")
     refreshBuildings()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
