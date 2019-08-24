@@ -100,7 +100,7 @@ function updateTabDisplay() {
     existingTabNames.forEach(function(name) {
         let toDisplay = name==currentTab && getElement(`${name}TabBtn`).style.display==="" && player.storyId>=4
         decideElementDisplay(`${name}Tab`, toDisplay)
-        eval(`getElement("${name}TabBtn").childNodes[0].classList.${toDisplay?"add":"remove"}("active")`) // Sometimes you just need to do a if condition
+        getElement(`${name}TabBtn`).childNodes[0].classList.toggle("active", toDisplay)
     })
 }
 
@@ -168,20 +168,9 @@ function updateBuildings() {
         let buyButton = tr.cells[3].childNodes[0]
         let buildingState = getBuildingState(id)
         buyButton.innerHTML = getBuildingState(id)
-        switch (buildingState) {
-            case "Locked":
-                buyButton.classList.remove("btn-success","btn-danger")
-                buyButton.classList.add("btn-secondary")
-                break;
-            case "Can't afford":
-                buyButton.classList.remove("btn-success","btn-secondary")
-                buyButton.classList.add("btn-danger")
-                break;
-            case "Buy":
-                buyButton.classList.remove("btn-danger","btn-secondary")
-                buyButton.classList.add("btn-success")
-                break;
-        }
+        buyButton.classList.toggle("btn-success", buildingState=="Buy")
+        buyButton.classList.toggle("btn-danger", buildingState=="Can't afford")
+        buyButton.classList.toggle("btn-secondary", buildingState=="Locked")
     })
 }
 
