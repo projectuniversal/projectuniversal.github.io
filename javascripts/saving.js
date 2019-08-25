@@ -28,6 +28,12 @@ function onImportSuccess() {
 function onLoad() { // Put your savefile updating codes here
     if (player.version === null) player.version = 1
     if (player.version < 3) delete player.inPrologue
+    if (player.version < 4) {
+        delete player.queueTime
+        delete player.queueInterval
+        delete player.atomInQueue
+        delete player.queueCap
+    }
     changeTab(player.storyId<6?"generator":"buildings")
     refreshBuildings()
 }

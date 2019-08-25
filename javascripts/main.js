@@ -3,15 +3,17 @@ function getDefaultPlayer() {
         lastUpdate: new Date().getTime(),
         atom: new Decimal(0),
         storyId: 0,
-        queueTime: 0,
-        queueInterval: 1,
-        atomInQueue: new Decimal(0),
-        queueCap: new Decimal(10),
+        mergeTime: 0,
+        mergeInterval: 1,
+        particleAmount: new Decimal(0),
+        particleCap: new Decimal(20),
+        particleCreatePower: new Decimal(2),
+        particleAtomRatio: new Decimal(3),
         buildingAmounts: [new Decimal(0), new Decimal(0)],
         buildingCosts: [new Decimal(20), new Decimal(100)],
-        buildingPowers: [new Decimal(0.2), new Decimal(1)],
+        buildingPowers: [new Decimal(0.5), new Decimal(3)],
         buildingCostScales: [new Decimal(1.1), new Decimal(1.2)],
-        version: 3
+        version: 4
     }
 }
 getElement = document.getElementById.bind(document)
@@ -41,7 +43,7 @@ setOnclick("genActivateBtn", function() {
     updateElement("genActivateBtn", "ACTIVATED")
     prologueGenActivated = true
 })
-setOnclick("atomClickGain",addAtomIntoQueue)
+setOnclick("particleClickGain",createParticle)
 
 function setOnclick(id,func) {
   getElement(id).onclick = func
@@ -108,9 +110,9 @@ function skipPrologue() {
   player.storyId = Math.max(6, player.storyId)
 }
 
-function addAtomIntoQueue() {
-  let addAmount = Decimal.min(player.queueCap.sub(player.atomInQueue),new Decimal(1))
-  player.atomInQueue = player.atomInQueue.plus(addAmount)
+function createParticle() {
+  let addAmount = Decimal.min(player.particleCap.sub(player.particleAmount),player.particleCreatePower)
+  player.particleAmount = player.particleAmount.plus(addAmount)
 }
 
 function checkMilestone() {
@@ -127,7 +129,7 @@ function checkMilestone() {
   }
 }
 
-function atomPerSec() {
+function particlePerSec() {
   let ret = new Decimal(0)
   for (i=0;i<player.buildingAmounts.length;i++) {
     ret = ret.plus(player.buildingAmounts[i].times(player.buildingPowers[i]))
@@ -163,7 +165,7 @@ function getBuildingState(id) {
 
 function updateBuildings() {
     Array.from(getElement("buildingRows").rows).forEach((tr, id) => {
-        tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id])} atom/s`
+        tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id])} particle/s`
         tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id]))} Atoms`
         let buyButton = tr.cells[3].childNodes[0]
         let buildingState = getBuildingState(id)
@@ -206,28 +208,29 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   }
   if (player.storyId > 5) {
     updateBuildings()
-    player.atomInQueue = Decimal.min(player.queueCap, player.atomInQueue.plus(atomPerSec().times(diff).div(1000)))
-    player.queueTime += diff*0.001
-    if (player.atomInQueue.lt(1)) {
-      player.queueTime = 0
-    } else if (player.queueTime>=player.queueInterval) {
-      let atomToAdd = Decimal.floor(Decimal.min(player.atomInQueue, player.queueTime/player.queueInterval))
-      player.queueTime -= player.queueInterval*atomToAdd
-      player.atomInQueue = player.atomInQueue.sub(atomToAdd)
+    player.particleAmount = Decimal.min(player.particleCap, player.particleAmount.plus(particlePerSec().times(diff).div(1000)))
+    player.mergeTime += diff*0.001
+    if (player.particleAmount.lt(player.particleAtomRatio)) {
+      player.mergeTime = 0
+    } else if (player.mergeTime>=player.mergeInterval) {
+      let atomToAdd = Decimal.floor(Decimal.min(player.particleAmount.div(player.particleAtomRatio), player.mergeTime/player.mergeInterval))
+      player.mergeTime -= player.mergeInterval*atomToAdd
+      player.particleAmount = player.particleAmount.sub(atomToAdd.times(player.particleAtomRatio))
       player.atom = player.atom.plus(atomToAdd)
     }
     checkMilestone()
   }
 
-  updateElement("timeTillNextAtom", shortenMoney(player.queueInterval-player.queueTime))
-  updateElement("atomCount", `You have ${shortenMoney(player.storyId<=5?prologueAtom:player.atom)} atoms`)
+  updateElement("timeTillNextAtom", shortenMoney(player.mergeInterval-player.mergeTime))
+  updateElement("atomCount", `You have ${shortenMoney(player.storyId<=5?prologueAtom:player.atom)} Atoms`)
   updateElement("storyDisplay", storyTexts[player.storyId])
-  updateElement("atomQueueAmount", shortenMoney(player.atomInQueue))
-  updateElement("atomQueueCap", shortenMoney(player.queueCap))
+  updateElement("particleAmount", shortenMoney(player.particleAmount))
+  updateElement("particleCap", shortenMoney(player.particleCap))
+  updateElement("particleClickGain", `Create ${shortenMoney(player.particleCreatePower)} Particles`)
   decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
-  decideElementDisplay("atomClickGainContainer", player.storyId>=6)
+  decideElementDisplay("particleClickGainContainer", player.storyId>=6)
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("upgradesTabBtn", (player.storyId>=8)&&false)
