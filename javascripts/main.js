@@ -30,8 +30,10 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "And it all starts with this generator.",
                   "SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in estimated ten seconds.",
                   "The Beginning, next stage at 20 atoms",
-                  "Building unlocked, next stage at 100 atoms",
+                  "Building unlocked, next stage at 50 atoms",
+                  "Upgrades unlocked (WIP), next stage at 100 atoms",
                   "Tier 1 unlocked, end of content"]
+let buildingNames = ["Atom Constructor", "Place Holder"]
 let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
@@ -122,6 +124,9 @@ function checkMilestone() {
       updateTabDisplay()
       break;
     case 7:
+      if (player.atom.gte(50)) player.storyId++
+      break;
+    case 8:
       if (player.atom.gte(100)) player.storyId++
       break;
     default:
@@ -140,8 +145,9 @@ function particlePerSec() {
 function getCurrentTier() {
     switch (player.storyId) {
         case 7:
-            return 0;
         case 8:
+            return 0;
+        case 9:
             return 1;
         default:
             return -1;
@@ -165,6 +171,7 @@ function getBuildingState(id) {
 
 function updateBuildings() {
     Array.from(getElement("buildingRows").rows).forEach((tr, id) => {
+        tr.cells[0].innerHTML = `${buildingNames[id]}${player.buildingAmounts[id].gt(0)?" (Owned "+shortenMoney(player.buildingAmounts[id])+")":""}`
         tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id])} particle/s`
         tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id]))} Atoms`
         let buyButton = tr.cells[3].childNodes[0]
@@ -233,6 +240,6 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   decideElementDisplay("particleClickGainContainer", player.storyId>=6)
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
-  decideElementDisplay("upgradesTabBtn", (player.storyId>=8)&&false)
+  decideElementDisplay("upgradesTabBtn", player.storyId>=8)
   player.lastUpdate = thisUpdate
 }
