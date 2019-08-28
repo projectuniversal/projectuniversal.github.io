@@ -47,7 +47,7 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Upgrades unlocked, next stage at 100 atoms",
                   "Tier 1 unlocked, end of content"]
 let displayNames = {
-    building: ["Atom constructor", "Place Holder"],
+    building: ["Particle constructor", "Place Holder"],
     upgrade: ["Bigger Atom Merger", "Bigger Particle Storage"]
 }
 let currentTab = "buildings"
