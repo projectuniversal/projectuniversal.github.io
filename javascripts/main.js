@@ -11,23 +11,23 @@ function getDefaultPlayer() {
         particleCreatePower: new Decimal(2),
         particleAtomRatio: new Decimal(3),
         itemAmounts: {
-            building: [new Decimal(0), new Decimal(0)],
+            building: [new Decimal(0), new Decimal(0), new Decimal(0)],
             upgrade: [new Decimal(0), new Decimal(0), new Decimal(0)]
         },
         itemCosts: {
-            building: [new Decimal(20), new Decimal(100)],
+            building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
             upgrade: [new Decimal(50), new Decimal(200), new Decimal(1)]
         },
         itemPowers: {
-            building: [new Decimal(0.5), new Decimal(3)],
+            building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
             upgrade: [new Decimal(2), new Decimal(10), new Decimal(0.5)]
         },
         itemCostScales: {
-            building: [new Decimal(1.1), new Decimal(1.2)],
+            building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.5)],
             upgrade: [new Decimal(2.5), new Decimal(250), new Decimal(2)]
         },
         itemAmountCaps: {
-          building: [new Decimal(-1), new Decimal(-1)],
+          building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
           upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(4)]
         },
         placeholder: new Decimal(0),
@@ -54,9 +54,10 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Building unlocked, next stage at 50 atoms",
                   "Upgrades unlocked, next stage at 100 atoms",
                   "Tier 1 unlocked, next stage at 2e3 atoms",
-                  "Unnamed currency unlocked, end of content."]
+                  "Unnamed currency unlocked, next stage at 1e4 atoms.",
+                  "Tier 2 unlocked, end of content."]
 let displayNames = {
-    building: ["Particle constructor", "Place Holder"],
+    building: ["Particle constructor", "T1 Building", "T2 Building"],
     upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "More efficient Atom merging"]
 }
 let currentTab = "buildings"
@@ -156,6 +157,9 @@ function checkMilestone() {
       break;
     case 9:
       if (player.atom.gte(2e3)) player.storyId++
+      break;
+    case 10:
+      if (player.atom.gte(1e4)) player.storyId++
     default:
       return;
   }
@@ -173,12 +177,14 @@ function getCurrentTier() {
     switch (player.storyId) {
         case 7:
         case 8:
-            return 0;
+          return 0;
         case 9:
         case 10:
-            return 1;
+          return 1;
+        case 11:
+          return 2;
         default:
-            return -1;
+          return -1;
     }
 }
 
