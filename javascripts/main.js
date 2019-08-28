@@ -44,7 +44,7 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in estimated ten seconds.",
                   "The Beginning, next stage at 20 atoms",
                   "Building unlocked, next stage at 50 atoms",
-                  "Upgrades unlocked (WIP), next stage at 100 atoms",
+                  "Upgrades unlocked, next stage at 100 atoms",
                   "Tier 1 unlocked, end of content"]
 let displayNames = {
     building: ["Atom constructor", "Place Holder"],
