@@ -12,19 +12,19 @@ function getDefaultPlayer() {
         particleAtomRatio: new Decimal(3),
         itemAmounts: {
             building: [new Decimal(0), new Decimal(0)],
-            upgrade: [new Decimal(0)]
+            upgrade: [new Decimal(0), new Decimal(0)]
         },
         itemCosts: {
             building: [new Decimal(20), new Decimal(100)],
-            upgrade: [new Decimal(100)]
+            upgrade: [new Decimal(100), new Decimal(200)]
         },
         itemPowers: {
             building: [new Decimal(0.5), new Decimal(3)],
-            upgrade: [new Decimal(2)]
+            upgrade: [new Decimal(2), new Decimal(10)]
         },
         itemCostScales: {
             building: [new Decimal(1.1), new Decimal(1.2)],
-            upgrade: [new Decimal(3)]
+            upgrade: [new Decimal(3), new Decimal(100)]
         },
         version: 5
     }
@@ -48,7 +48,7 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Tier 1 unlocked, end of content"]
 let displayNames = {
     building: ["Atom constructor", "Place Holder"],
-    upgrade: ["Bigger Atom Merger"]
+    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage"]
 }
 let currentTab = "buildings"
 
@@ -179,7 +179,8 @@ function updateAllUpgradeEffect() {
 function getUpgradeEffect(id) {
     switch (id) {
         case 0:
-            return Decimal.pow(2, player.itemAmounts.upgrade[0])
+        case 1:
+            return Decimal.pow(player.itemPowers.upgrade[id], player.itemAmounts.upgrade[id])
     }
 }
 
@@ -188,6 +189,8 @@ function updateUpgradeEffect(id) {
         case 0:
             player.mergePower = getUpgradeEffect(0)
             break;
+        case 1:
+            player.particleCap = new Decimal(20).times(getUpgradeEffect(1))
     }
 }
 
@@ -224,7 +227,7 @@ function updateBuildings() {
 function updateUpgrades() {
     Array.from(getElement("upgradeRows").rows).forEach((tr, id) => {
         tr.cells[0].innerHTML = `${displayNames.upgrade[id]}${player.itemAmounts.upgrade[id].gt(0)?" (Owned "+shortenMoney(player.itemAmounts.upgrade[id])+")":""}`
-        tr.cells[2].innerHTML = `${shortenMoney(getUpgradeEffect(0))}x`
+        tr.cells[2].innerHTML = `${shortenMoney(getUpgradeEffect(id))}x`
         tr.cells[3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.upgrade[id]))} Atoms`
         let buyButton = tr.cells[4].childNodes[0]
         let canAfford = player.atom.gte(player.itemCosts.upgrade[id])
