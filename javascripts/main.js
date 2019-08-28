@@ -24,7 +24,7 @@ function getDefaultPlayer() {
         },
         itemCostScales: {
             building: [new Decimal(1.1), new Decimal(1.2)],
-            upgrade: [new Decimal(3), new Decimal(100)]
+            upgrade: [new Decimal(3), new Decimal(250)]
         },
         version: 5
     }
