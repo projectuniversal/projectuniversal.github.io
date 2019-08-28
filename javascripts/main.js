@@ -32,7 +32,7 @@ function getDefaultPlayer() {
         },
         placeholder: new Decimal(0),
         placeholderGained: new Decimal(0),
-        placeholderNextReq: new Decimal(5e3),
+        placeholderNextReq: new Decimal(2e3),
         placeholderReqScale: new Decimal(2.5),
         version: 7
     }
@@ -53,7 +53,7 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "The Beginning, next stage at 20 atoms",
                   "Building unlocked, next stage at 50 atoms",
                   "Upgrades unlocked, next stage at 100 atoms",
-                  "Tier 1 unlocked, next stage at 5e3 atoms",
+                  "Tier 1 unlocked, next stage at 2e3 atoms",
                   "Unnamed currency unlocked, end of content."]
 let displayNames = {
     building: ["Particle constructor", "Place Holder"],
@@ -155,7 +155,7 @@ function checkMilestone() {
       if (player.atom.gte(100)) player.storyId++
       break;
     case 9:
-      if (player.atom.gte(5e3)) player.storyId++
+      if (player.atom.gte(2e3)) player.storyId++
     default:
       return;
   }
