@@ -7,10 +7,15 @@ let playerVarName = "player" // DO NOT USE THE WORD "SAVE"
 let importDangerAlertText = "Your imported save seems to be missing some values, which means importing this save might be destructive, if you have made a backup of your current save and are sure about importing this save please press OK, if not, press cancel and the save will not be imported."
 let versionTagName = "version"
 let arrayTypes = { // For EACH array in your player variable, put a key/value to define its type like I did below
-  buildingAmounts: "Decimal",
-  buildingCosts: "Decimal",
-  buildingPowers: "Decimal",
-  buildingScales: "Decimal",
+  "buildingAmounts": "Decimal", // Needed to load savefile below version 5
+  "itemAmounts.building": "Decimal",
+  "itemCosts.building": "Decimal",
+  "itemPowers.building": "Decimal",
+  "itemCostScales.building": "Decimal",
+  "itemAmounts.upgrade": "Decimal",
+  "itemCosts.upgrade": "Decimal",
+  "itemPowers.upgrade": "Decimal",
+  "itemCostScales.upgrade": "Decimal"
 }
 
 function onImportError() {
@@ -33,6 +38,12 @@ function onLoad() { // Put your savefile updating codes here
         delete player.queueInterval
         delete player.atomInQueue
         delete player.queueCap
+    }
+    if (player.version < 5) {
+        delete player.buildingCosts
+        delete player.buildingPowers
+        delete player.buildingCostScales
+        player.itemAmounts.building = player.buildingAmounts
     }
     changeTab(player.storyId<6?"generator":"buildings")
     refreshBuildings()

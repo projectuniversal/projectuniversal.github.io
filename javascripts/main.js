@@ -9,11 +9,23 @@ function getDefaultPlayer() {
         particleCap: new Decimal(20),
         particleCreatePower: new Decimal(2),
         particleAtomRatio: new Decimal(3),
-        buildingAmounts: [new Decimal(0), new Decimal(0)],
-        buildingCosts: [new Decimal(20), new Decimal(100)],
-        buildingPowers: [new Decimal(0.5), new Decimal(3)],
-        buildingCostScales: [new Decimal(1.1), new Decimal(1.2)],
-        version: 4
+        itemAmounts: {
+            building: [new Decimal(0), new Decimal(0)],
+            upgrade: [new Decimal(0)]
+        },
+        itemCosts: {
+            building: [new Decimal(20), new Decimal(100)],
+            upgrade: [new Decimal(100)]
+        },
+        itemPowers: {
+            building: [new Decimal(0.5), new Decimal(3)],
+            upgrade: [new Decimal(2)]
+        },
+        itemCostScales: {
+            building: [new Decimal(1.1), new Decimal(1.2)],
+            upgrade: [new Decimal(3)]
+        },
+        version: 5
     }
 }
 getElement = document.getElementById.bind(document)
@@ -136,8 +148,8 @@ function checkMilestone() {
 
 function particlePerSec() {
   let ret = new Decimal(0)
-  for (i=0;i<player.buildingAmounts.length;i++) {
-    ret = ret.plus(player.buildingAmounts[i].times(player.buildingPowers[i]))
+  for (i=0;i<player.itemAmounts.building.length;i++) {
+    ret = ret.plus(player.itemAmounts.building[i].times(player.itemPowers.building[i]))
   }
   return ret
 }
@@ -156,24 +168,24 @@ function getCurrentTier() {
 
 function buyBuilding(id) {
   if (getCurrentTier()<id) return;
-  if (player.atom.gte(Decimal.ceil(player.buildingCosts[id]))) {
-    player.buildingAmounts[id] = player.buildingAmounts[id].plus(1)
-    player.atom = player.atom.sub(Decimal.ceil(player.buildingCosts[id]))
-    player.buildingCosts[id] = player.buildingCosts[id].times(player.buildingCostScales[id])
+  if (player.atom.gte(Decimal.ceil(player.itemCosts.building[id]))) {
+    player.itemAmounts.building[id] = player.itemAmounts.building[id].plus(1)
+    player.atom = player.atom.sub(Decimal.ceil(player.itemCosts.building[id]))
+    player.itemCosts.building[id] = player.itemCosts.building[id].times(player.itemCostScales.building[id])
   }
 }
 
 function getBuildingState(id) {
     if (getCurrentTier() < id) return "Locked"
-    if (player.atom.lt(Decimal.ceil(player.buildingCosts[id]))) return "Can't afford"
+    if (player.atom.lt(Decimal.ceil(player.itemCosts.building[id]))) return "Can't afford"
     return "Buy"
 }
 
 function updateBuildings() {
     Array.from(getElement("buildingRows").rows).forEach((tr, id) => {
-        tr.cells[0].innerHTML = `${buildingNames[id]}${player.buildingAmounts[id].gt(0)?" (Owned "+shortenMoney(player.buildingAmounts[id])+")":""}`
-        tr.cells[1].innerHTML = `${shortenMoney(player.buildingPowers[id])} particle/s`
-        tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.buildingCosts[id]))} Atoms`
+        tr.cells[0].innerHTML = `${buildingNames[id]}${player.itemAmounts.building[id].gt(0)?" (Owned "+shortenMoney(player.itemAmounts.building[id])+")":""}`
+        tr.cells[1].innerHTML = `${shortenMoney(player.itemPowers.building[id])} particle/s`
+        tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.building[id]))} Atoms`
         let buyButton = tr.cells[3].childNodes[0]
         let buildingState = getBuildingState(id)
         buyButton.innerHTML = getBuildingState(id)
@@ -191,11 +203,13 @@ function resetValues(names) {
 }
 
 function refreshBuildings() {
-    resetValues(["buildingCosts","buildingPowers","buildingCostScales"])
-    for (let i=0;i<player.buildingCosts.length;i++) {
-        if (typeof player.buildingAmounts[i] != "object") player.buildingAmounts[i] = new Decimal(0)
-        else player.buildingCosts[i] = player.buildingCosts[i].times(Decimal.pow(player.buildingCostScales[i],player.buildingAmounts[i]))
-    }
+    resetValues(["itemCosts","itemPowers","itemCostScales"])
+    Object.keys(player.itemCosts).forEach(function(itemType) {
+        for (let i=0;i<player.itemCosts[itemType].length;i++) {
+            if (typeof player.itemAmounts[itemType][i] != "object") player.itemAmounts[itemType][i] = new Decimal(0)
+            else player.itemCosts[itemType][i] = player.itemCosts[itemType][i].times(Decimal.pow(player.itemCostScales[itemType][i],player.itemAmounts[itemType][i]))
+        }
+    })
 }
 
 function gameLoop(diff) { // 1 diff = 0.001 seconds
