@@ -15,7 +15,9 @@ let arrayTypes = { // For EACH array in your player variable, put a key/value to
   "itemAmounts.upgrade": "Decimal",
   "itemCosts.upgrade": "Decimal",
   "itemPowers.upgrade": "Decimal",
-  "itemCostScales.upgrade": "Decimal"
+  "itemCostScales.upgrade": "Decimal",
+  "itemAmountCaps.building": "Decimal",
+  "itemAmountCaps.upgrade": "Decimal"
 }
 
 function onImportError() {
@@ -48,6 +50,7 @@ function onLoad() { // Put your savefile updating codes here
     }
     changeTab(player.storyId<6?"generator":"buildings")
     refreshItems()
+    refreshPlaceholderReq()
     updateAllUpgradeEffect()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
