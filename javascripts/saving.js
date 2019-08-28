@@ -44,6 +44,7 @@ function onLoad() { // Put your savefile updating codes here
         delete player.buildingPowers
         delete player.buildingCostScales
         player.itemAmounts.building = player.buildingAmounts
+        delete player.buildingAmounts
     }
     changeTab(player.storyId<6?"generator":"buildings")
     refreshBuildings()
