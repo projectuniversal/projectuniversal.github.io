@@ -280,7 +280,7 @@ function updateUpgrades() {
         tr.cells[2].innerHTML = getUpgradeEffectDisplay(id)
         tr.cells[3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.upgrade[id]))} ${getUpgradeCostCurrencyName(id, "upgrade")}s`
         let buyButton = tr.cells[4].childNodes[0]
-        let availability = player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyItem(id)?2:1:0
+        let availability = player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyItem(id, "upgrade")?2:1:0
         let displayTexts = ["Maxed", "Can't afford", "Buy"]
         buyButton.innerHTML = displayTexts[availability]
         buyButton.classList.toggle("btn-success", availability==2)
