@@ -212,14 +212,21 @@ function updateUpgradeEffect(id) {
     }
 }
 
-function canBuyUpgrade(id) {
-  return player[getUpgradeCostCurrencyName(id)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
+function canBuyItem(id, type) {
+  switch (type) {
+    case "building":
+      return player.atom.gte(Decimal.ceil(player.itemCosts.building[id]))
+    case "upgrade":
+      return player[getUpgradeCostCurrencyName(id, type)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
+    default:
+      return false
+  }
 }
 
 function buyItem(id, type) {
   if (type == "building" && getCurrentTier()<id) return;
-  let currency = getUpgradeCostCurrencyName(id)
-  if (canBuyUpgrade(id)) {
+  let currency = getUpgradeCostCurrencyName(id, type)
+  if (canBuyItem(id, type)) {
     player.itemAmounts[type][id] = player.itemAmounts[type][id].plus(1)
     player[currency] = player[currency].sub(Decimal.ceil(player.itemCosts[type][id]))
     player.itemCosts[type][id] = player.itemCosts[type][id].times(player.itemCostScales[type][id])
@@ -247,8 +254,13 @@ function updateBuildings() {
     })
 }
 
-function getUpgradeCostCurrencyName(id) {
-  return id<2?"atom":"placeholder"
+function getUpgradeCostCurrencyName(id, type) {
+  switch (type) {
+    case "building":
+      return "atom"
+    case "upgrade":
+      return id<2?"atom":"placeholder"
+  }
 }
 
 function getUpgradeEffectDisplay(id) {
@@ -266,9 +278,9 @@ function updateUpgrades() {
     Array.from(getElement("upgradeRows").rows).forEach((tr, id) => {
         tr.cells[0].innerHTML = `${displayNames.upgrade[id]}${player.itemAmounts.upgrade[id].gt(0)?" (Owned "+shortenMoney(player.itemAmounts.upgrade[id])+")":""}`
         tr.cells[2].innerHTML = getUpgradeEffectDisplay(id)
-        tr.cells[3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.upgrade[id]))} ${getUpgradeCostCurrencyName(id)}s`
+        tr.cells[3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.upgrade[id]))} ${getUpgradeCostCurrencyName(id, "upgrade")}s`
         let buyButton = tr.cells[4].childNodes[0]
-        let availability = player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyUpgrade(id)?2:1:0
+        let availability = player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyItem(id)?2:1:0
         let displayTexts = ["Maxed", "Can't afford", "Buy"]
         buyButton.innerHTML = displayTexts[availability]
         buyButton.classList.toggle("btn-success", availability==2)
