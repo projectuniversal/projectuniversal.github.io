@@ -16,7 +16,7 @@ function getDefaultPlayer() {
         },
         itemCosts: {
             building: [new Decimal(20), new Decimal(100)],
-            upgrade: [new Decimal(100), new Decimal(200)]
+            upgrade: [new Decimal(50), new Decimal(200)]
         },
         itemPowers: {
             building: [new Decimal(0.5), new Decimal(3)],
