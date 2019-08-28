@@ -12,21 +12,29 @@ function getDefaultPlayer() {
         particleAtomRatio: new Decimal(3),
         itemAmounts: {
             building: [new Decimal(0), new Decimal(0)],
-            upgrade: [new Decimal(0), new Decimal(0)]
+            upgrade: [new Decimal(0), new Decimal(0), new Decimal(0)]
         },
         itemCosts: {
             building: [new Decimal(20), new Decimal(100)],
-            upgrade: [new Decimal(50), new Decimal(200)]
+            upgrade: [new Decimal(50), new Decimal(200), new Decimal(1)]
         },
         itemPowers: {
             building: [new Decimal(0.5), new Decimal(3)],
-            upgrade: [new Decimal(2), new Decimal(10)]
+            upgrade: [new Decimal(2), new Decimal(10), new Decimal(0.5)]
         },
         itemCostScales: {
             building: [new Decimal(1.1), new Decimal(1.2)],
-            upgrade: [new Decimal(2.5), new Decimal(250)]
+            upgrade: [new Decimal(2.5), new Decimal(250), new Decimal(2)]
         },
-        version: 5
+        itemAmountCaps: {
+          building: [new Decimal(-1), new Decimal(-1)],
+          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(4)]
+        },
+        placeholder: new Decimal(0),
+        placeholderGained: new Decimal(0),
+        placeholderNextReq: new Decimal(5e3),
+        placeholderReqScale: new Decimal(2.5),
+        version: 7
     }
 }
 getElement = document.getElementById.bind(document)
@@ -45,10 +53,11 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "The Beginning, next stage at 20 atoms",
                   "Building unlocked, next stage at 50 atoms",
                   "Upgrades unlocked, next stage at 100 atoms",
-                  "Tier 1 unlocked, end of content"]
+                  "Tier 1 unlocked, next stage at 5e3 atoms",
+                  "Unnamed currency unlocked, end of content."]
 let displayNames = {
     building: ["Particle constructor", "Place Holder"],
-    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage"]
+    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "More efficient Atom merging"]
 }
 let currentTab = "buildings"
 
@@ -145,6 +154,8 @@ function checkMilestone() {
     case 8:
       if (player.atom.gte(100)) player.storyId++
       break;
+    case 9:
+      if (player.atom.gte(5e3)) player.storyId++
     default:
       return;
   }
@@ -164,6 +175,7 @@ function getCurrentTier() {
         case 8:
             return 0;
         case 9:
+        case 10:
             return 1;
         default:
             return -1;
@@ -180,25 +192,36 @@ function getUpgradeEffect(id) {
     switch (id) {
         case 0:
         case 1:
-            return Decimal.pow(player.itemPowers.upgrade[id], player.itemAmounts.upgrade[id])
+          return Decimal.pow(player.itemPowers.upgrade[id], player.itemAmounts.upgrade[id])
+        case 2:
+          return Decimal.min(player.itemPowers.upgrade[id].times(player.itemAmounts.upgrade[id]),2.5)
     }
 }
 
 function updateUpgradeEffect(id) {
     switch (id) {
         case 0:
-            player.mergePower = getUpgradeEffect(0)
-            break;
+          player.mergePower = getUpgradeEffect(0)
+          break;
         case 1:
-            player.particleCap = new Decimal(20).times(getUpgradeEffect(1))
+          resetValues(["particleCap"])
+          player.particleCap = player.particleCap.times(getUpgradeEffect(1))
+        case 2:
+          resetValues(["particleAtomRatio"])
+          player.particleAtomRatio = player.particleAtomRatio.sub(getUpgradeEffect(2))
     }
+}
+
+function canBuyUpgrade(id) {
+  return player[getUpgradeCostCurrencyName(id)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
 }
 
 function buyItem(id, type) {
   if (type == "building" && getCurrentTier()<id) return;
-  if (player.atom.gte(Decimal.ceil(player.itemCosts[type][id]))) {
+  let currency = getUpgradeCostCurrencyName(id)
+  if (canBuyUpgrade(id)) {
     player.itemAmounts[type][id] = player.itemAmounts[type][id].plus(1)
-    player.atom = player.atom.sub(Decimal.ceil(player.itemCosts[type][id]))
+    player[currency] = player[currency].sub(Decimal.ceil(player.itemCosts[type][id]))
     player.itemCosts[type][id] = player.itemCosts[type][id].times(player.itemCostScales[type][id])
     if (type == "upgrade") updateUpgradeEffect(id)
   }
@@ -224,16 +247,33 @@ function updateBuildings() {
     })
 }
 
+function getUpgradeCostCurrencyName(id) {
+  return id<2?"atom":"placeholder"
+}
+
+function getUpgradeEffectDisplay(id) {
+  switch (id) {
+    case 0:
+    case 1:
+      return `${shortenMoney(getUpgradeEffect(id))}x`
+      break;
+    case 2:
+      return `${new Decimal(3).sub(getUpgradeEffect(id))}:1`
+  }
+}
+
 function updateUpgrades() {
     Array.from(getElement("upgradeRows").rows).forEach((tr, id) => {
         tr.cells[0].innerHTML = `${displayNames.upgrade[id]}${player.itemAmounts.upgrade[id].gt(0)?" (Owned "+shortenMoney(player.itemAmounts.upgrade[id])+")":""}`
-        tr.cells[2].innerHTML = `${shortenMoney(getUpgradeEffect(id))}x`
-        tr.cells[3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.upgrade[id]))} Atoms`
+        tr.cells[2].innerHTML = getUpgradeEffectDisplay(id)
+        tr.cells[3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.upgrade[id]))} ${getUpgradeCostCurrencyName(id)}s`
         let buyButton = tr.cells[4].childNodes[0]
-        let canAfford = player.atom.gte(player.itemCosts.upgrade[id])
-        buyButton.innerHTML = canAfford?"Buy":"Can't afford"
-        buyButton.classList.toggle("btn-success", canAfford)
-        buyButton.classList.toggle("btn-danger", !canAfford)
+        let availability = player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyUpgrade(id)?2:1:0
+        let displayTexts = ["Maxed", "Can't afford", "Buy"]
+        buyButton.innerHTML = displayTexts[availability]
+        buyButton.classList.toggle("btn-success", availability==2)
+        buyButton.classList.toggle("btn-danger", availability==1)
+        buyButton.classList.toggle("btn-info", availability===0)
     })
 }
 
@@ -245,13 +285,28 @@ function resetValues(names) {
 }
 
 function refreshItems() {
-    resetValues(["itemCosts","itemPowers","itemCostScales"])
+    resetValues(["itemCosts","itemPowers","itemCostScales","itemAmountCaps"])
     Object.keys(player.itemCosts).forEach(function(itemType) {
         for (let i=0;i<player.itemCosts[itemType].length;i++) {
             if (typeof player.itemAmounts[itemType][i] != "object") player.itemAmounts[itemType][i] = new Decimal(0)
             else player.itemCosts[itemType][i] = player.itemCosts[itemType][i].times(Decimal.pow(player.itemCostScales[itemType][i],player.itemAmounts[itemType][i]))
         }
     })
+}
+
+function refreshPlaceholderReq() {
+  resetValues(["placeholderNextReq", "placeholderReqScale"])
+  player.placeholderNextReq = player.placeholderNextReq.times(Decimal.pow(player.placeholderReqScale, player.placeholderGained))
+}
+
+function checkPlaceholderGain() {
+  let failsafe = 0
+  while (failsafe < 100 && player.placeholderNextReq.lte(player.atom)) {
+    player.placeholder = player.placeholder.plus(1)
+    player.placeholderGained = player.placeholderGained.plus(1)
+    player.placeholderNextReq = player.placeholderNextReq.times(player.placeholderReqScale)
+    failsafe++
+  }
 }
 
 function gameLoop(diff) { // 1 diff = 0.001 seconds
@@ -287,6 +342,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
       player.atom = player.atom.plus(atomToAdd)
     }
     checkMilestone()
+    checkPlaceholderGain()
   }
 
   // Update all display
@@ -297,6 +353,8 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   updateElement("particleAmount", shortenMoney(player.particleAmount))
   updateElement("particleCap", shortenMoney(player.particleCap))
   updateElement("particleClickGain", `Create ${shortenMoney(player.particleCreatePower)} Particles`)
+  updateElement("placeholderAmount", shortenMoney(player.placeholder))
+  updateElement("placeholderNextReqDisplay", shortenMoney(player.placeholderNextReq))
   decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
@@ -304,5 +362,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
+  decideElementDisplay("placeholderDisplayContainer", player.storyId>=10)
+  decideElementDisplay("upg2Container", player.storyId>=10)
   player.lastUpdate = thisUpdate
 }
