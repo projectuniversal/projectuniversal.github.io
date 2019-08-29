@@ -63,6 +63,7 @@ function onLoad() { // Put your savefile updating codes here
     refreshItems()
     refreshMoleculeReq()
     updateAllUpgradeEffect()
+    updateTabDisplay()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
 
