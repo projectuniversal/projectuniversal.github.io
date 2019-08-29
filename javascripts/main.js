@@ -30,11 +30,11 @@ function getDefaultPlayer() {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
           upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(4)]
         },
-        placeholder: new Decimal(0),
-        placeholderGained: new Decimal(0),
-        placeholderNextReq: new Decimal(2e3),
-        placeholderReqScale: new Decimal(2.5),
-        version: 7
+        molecule: new Decimal(0),
+        moleculeGained: new Decimal(0),
+        moleculeNextReq: new Decimal(2e3),
+        moleculeReqScale: new Decimal(2.5),
+        version: 8
     }
 }
 getElement = document.getElementById.bind(document)
@@ -265,7 +265,7 @@ function getUpgradeCostCurrencyName(id, type) {
     case "building":
       return "atom"
     case "upgrade":
-      return id<2?"atom":"placeholder"
+      return id<2?"atom":"molecule"
   }
 }
 
@@ -312,17 +312,17 @@ function refreshItems() {
     })
 }
 
-function refreshPlaceholderReq() {
-  resetValues(["placeholderNextReq", "placeholderReqScale"])
-  player.placeholderNextReq = player.placeholderNextReq.times(Decimal.pow(player.placeholderReqScale, player.placeholderGained))
+function refreshMoleculeReq() {
+  resetValues(["moleculeNextReq", "moleculeReqScale"])
+  player.moleculeNextReq = player.moleculeNextReq.times(Decimal.pow(player.moleculeReqScale, player.moleculeGained))
 }
 
-function checkPlaceholderGain() {
+function checkMoleculeGain() {
   let failsafe = 0
-  while (failsafe < 100 && player.placeholderNextReq.lte(player.atom)) {
-    player.placeholder = player.placeholder.plus(1)
-    player.placeholderGained = player.placeholderGained.plus(1)
-    player.placeholderNextReq = player.placeholderNextReq.times(player.placeholderReqScale)
+  while (failsafe < 100 && player.moleculeNextReq.lte(player.atom)) {
+    player.molecule = player.molecule.plus(1)
+    player.moleculeGained = player.moleculeGained.plus(1)
+    player.moleculeNextReq = player.moleculeNextReq.times(player.moleculeReqScale)
     failsafe++
   }
 }
@@ -360,7 +360,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
       player.atom = player.atom.plus(atomToAdd)
     }
     checkMilestone()
-    checkPlaceholderGain()
+    checkMoleculeGain()
   }
 
   // Update all display
@@ -371,8 +371,8 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   updateElement("particleAmount", shortenMoney(player.particleAmount))
   updateElement("particleCap", shortenMoney(player.particleCap))
   updateElement("particleClickGain", `Create ${shortenMoney(player.particleCreatePower)} Particles`)
-  updateElement("placeholderAmount", shortenMoney(player.placeholder))
-  updateElement("placeholderNextReqDisplay", shortenMoney(player.placeholderNextReq))
+  updateElement("moleculeAmount", shortenMoney(player.molecule))
+  updateElement("moleculeNextReqDisplay", shortenMoney(player.moleculeNextReq))
   decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
@@ -380,7 +380,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
-  decideElementDisplay("placeholderDisplayContainer", player.storyId>=10)
+  decideElementDisplay("moleculeDisplayContainer", player.storyId>=10)
   decideElementDisplay("upg2Container", player.storyId>=10)
   player.lastUpdate = thisUpdate
 }

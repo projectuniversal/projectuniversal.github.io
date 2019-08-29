@@ -48,9 +48,19 @@ function onLoad() { // Put your savefile updating codes here
         player.itemAmounts.building = player.buildingAmounts
         delete player.buildingAmounts
     }
+    if (player.version < 8) {
+      player.molecule = new Decimal(player.placeholder)
+      player.moleculeGained = new Decimal(player.palceholderGained)
+      player.moleculeNextReq = new Decimal(player.placeholderNextReq)
+      player.moleculeReqScale = new Decimal(player.placeholderReqScale)
+      delete player.placeholder
+      delete player.placeholderGained
+      delete player.placeholderNextReq
+      delete player.placeholderReqScale
+    }
     changeTab(player.storyId<6?"generator":"buildings")
     refreshItems()
-    refreshPlaceholderReq()
+    refreshMoleculeReq()
     updateAllUpgradeEffect()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
