@@ -32,6 +32,8 @@
         <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;" id="atomCount">You have 0 atoms</span></div>
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="moleculeDisplayContainer"><span style="color: rgb(141,150,157);">You have <span id="moleculeAmount">0</span> molecule, next molecule at <span id="moleculeNextReqDisplay">5e3</span> Atoms</div>
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="atomCountContainer"><span style="color: rgb(141,150,157);">There are <span id="particleAmount">0</span>/<span id="particleCap">10</span> Particles, next Particle merging in <span id="timeTillNextAtom">1</span> seconds</span></div>
+        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="crankEffectDisplayContainer"><span style="color: rgb(141,150,157);">Your crank is spinning at a speed of <span id="crankSpeedDisplay">?</span>, translated to <span id="crankBoostDisplay">?</span>x effectiveness for your buildings</div>
+        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="particlePerSecDisplayContainer"><span style="color: rgb(141,150,157);">Your buildings are producing <span id="particlePerSecDisplay">?</span> particles per second</div>
         <div class="container" style="margin: 1.5625%;" id="particleClickGainContainer"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="particleClickGain">Create 2 Particles</button></div>
         <ul class="nav nav-tabs" id="tabBtnContainer">
             <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
@@ -133,7 +135,10 @@
             </div>
         </div>
         <div class="container" style="margin: 0px 0px;" id="cranksTab" style="diplay:none">
-            <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;">This feature is still under development.</span></div>
+            <div class="container" id="crankSpeedBar" style="margin: 0px 0px;"></div>
+            <br>
+            <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="spinCrank()">Spin the Crank</button></div>
+
         </div>
         <div class="container" style="margin: 0px 0px;" id="optionsTab" style="diplay:none">
             <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="saveGame()">Save now</button>
@@ -142,10 +147,13 @@
             <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="hardReset()">HARD RESET</button>
         </div>
         <script src="javascripts/break_infinity.min.js"></script>
+        <script src="javascripts/progressbar.min.js"></script>
         <script src="javascripts/clipboard.js"></script>
+        <script src="javascripts/display.js"></script>
         <script src="javascripts/format.js"></script>
-        <script src="javascripts/saving.js"></script>
         <script src="javascripts/main.js"></script>
+        <script src="javascripts/crank.js"></script>
+        <script src="javascripts/saving.js"></script>
         <!-- vv Load scripts here! vv -->
         <!-- Bootstrap -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
