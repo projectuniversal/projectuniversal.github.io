@@ -37,6 +37,7 @@
             <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
             <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
             <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
+            <li class="nav-item" id="cranksTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('cranks')">Cranks</a></li>
             <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
         </ul>
         <div class="table-responsive">
@@ -64,21 +65,21 @@
                     </thead>
                     <tbody id="buildingRows">
                         <tr>
-                            <td class="align-middle" style="height: 60px;">Atom Constructor</td>
-                            <td class="align-middle" style="height: 60px;">0.2 atoms/s</td>
-                            <td class="align-middle" style="height: 60px;">20 atoms</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'building')">Build</button></td>
                         </tr>
                         <tr>
-                            <td class="align-middle" style="height: 60px;">Place Holder</td>
-                            <td class="align-middle" style="height: 60px;">1 atom/s</td>
-                            <td class="align-middle" style="height: 60px;">100 atoms</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-secondary align-middle" type="button" onclick="buyItem(1, 'building')">Build</button></td>
                         </tr>
                         <tr>
-                            <td class="align-middle" style="height: 60px;">Place Holder</td>
-                            <td class="align-middle" style="height: 60px;">1 atom/s</td>
-                            <td class="align-middle" style="height: 60px;">100 atoms</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-secondary align-middle" type="button" onclick="buyItem(2, 'building')">Build</button></td>
                         </tr>
                     </tbody>
@@ -100,29 +101,39 @@
                     </thead>
                     <tbody id="upgradeRows">
                         <tr>
-                            <td class="align-middle" style="height: 60px;">Bigger Atom Merger</td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;">2x Atom can be merged every second</td>
-                            <td class="align-middle" style="height: 60px;">1x</td>
-                            <td class="align-middle" style="height: 60px;">100 atoms</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'upgrade')">Build</button></td>
                         </tr>
                         <tr>
-                            <td class="align-middle" style="height: 60px;">Bigger Particle Storage</td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;">10x bigger particle storage</td>
-                            <td class="align-middle" style="height: 60px;">1x</td>
-                            <td class="align-middle" style="height: 60px;">200 atoms</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(1, 'upgrade')">Build</button></td>
                         </tr>
                         <tr id="upg2Container">
-                            <td class="align-middle" style="height: 60px;">More efficient Atom merging</td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;">0.5 less particles are required per atom</td>
-                            <td class="align-middle" style="height: 60px;">3:1</td>
-                            <td class="align-middle" style="height: 60px;">1 molecule</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(2, 'upgrade')">Build</button></td>
+                        </tr>
+                        <tr id="upg3Container">
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;">Construct a Crank out of molecules</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(3, 'upgrade')">Build</button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="container" style="margin: 0px 0px;" id="cranksTab" style="diplay:none">
+            <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;">This feature is still under development.</span></div>
         </div>
         <div class="container" style="margin: 0px 0px;" id="optionsTab" style="diplay:none">
             <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="saveGame()">Save now</button>

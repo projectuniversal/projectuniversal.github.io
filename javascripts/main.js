@@ -12,23 +12,23 @@ function getDefaultPlayer() {
         particleAtomRatio: new Decimal(3),
         itemAmounts: {
             building: [new Decimal(0), new Decimal(0), new Decimal(0)],
-            upgrade: [new Decimal(0), new Decimal(0), new Decimal(0)]
+            upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)]
         },
         itemCosts: {
             building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
-            upgrade: [new Decimal(50), new Decimal(200), new Decimal(1)]
+            upgrade: [new Decimal(50), new Decimal(200), new Decimal(1), new Decimal(2)]
         },
         itemPowers: {
             building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
-            upgrade: [new Decimal(2), new Decimal(10), new Decimal(0.5)]
+            upgrade: [new Decimal(2), new Decimal(10), new Decimal(0.5), new Decimal(0)]
         },
         itemCostScales: {
             building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
-            upgrade: [new Decimal(2.5), new Decimal(250), new Decimal(2)]
+            upgrade: [new Decimal(2.5), new Decimal(250), new Decimal(2), new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
-          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(4)]
+          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(4), new Decimal(1)]
         },
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
@@ -55,10 +55,11 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Upgrades unlocked, next stage at 100 atoms",
                   "Tier 1 unlocked, next stage at 2e3 atoms",
                   "Unnamed currency unlocked, next stage at 1e4 atoms.",
-                  "Tier 2 unlocked, end of content."]
+                  "Tier 2 unlocked, next stage when upgrade bought.",
+                  "Cranks unlocked, end of content."]
 let displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
-    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "More efficient Atom merging"]
+    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "More efficient Atom merging", "The Cranks"]
 }
 let currentTab = "buildings"
 
@@ -126,7 +127,7 @@ function changeTab(tabName) {
 }
 
 function updateTabDisplay() {
-    let existingTabNames = ["generator","buildings","upgrades","options"]
+    let existingTabNames = ["generator","buildings","upgrades","cranks","options"]
     existingTabNames.forEach(function(name) {
         let toDisplay = name==currentTab && getElement(`${name}TabBtn`).style.display==="" && player.storyId>=4
         decideElementDisplay(`${name}Tab`, toDisplay)
@@ -160,6 +161,10 @@ function checkMilestone() {
       break;
     case 10:
       if (player.atom.gte(1e4)) player.storyId++
+      break;
+    case 11:
+      if (player.itemAmounts.upgrade[3].gt(0)) player.storyId++
+      break;
     default:
       return;
   }
@@ -182,6 +187,7 @@ function getCurrentTier() {
         case 10:
           return 1;
         case 11:
+        case 12:
           return 2;
         default:
           return -1;
@@ -261,11 +267,14 @@ function updateBuildings() {
 }
 
 function getUpgradeCostCurrencyName(id, type) {
-  switch (type) {
-    case "building":
+  if (type == "building") return "atom"
+  switch (id) {
+    case 0:
+    case 1:
       return "atom"
-    case "upgrade":
-      return id<2?"atom":"molecule"
+    case 2:
+    case 3:
+      return "molecule"
   }
 }
 
@@ -277,6 +286,8 @@ function getUpgradeEffectDisplay(id) {
       break;
     case 2:
       return `${new Decimal(3).sub(getUpgradeEffect(id))}:1`
+    case 3:
+      return "Unlocks the Cranks"
   }
 }
 
@@ -382,5 +393,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
   decideElementDisplay("moleculeDisplayContainer", player.storyId>=10)
   decideElementDisplay("upg2Container", player.storyId>=10)
+  decideElementDisplay("upg3Container", player.storyId>=11)
+  decideElementDisplay("cranksTabBtn", player.storyId>=12)
   player.lastUpdate = thisUpdate
 }
