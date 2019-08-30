@@ -23,7 +23,7 @@ function getDefaultPlayer() {
             upgrade: [new Decimal(2), new Decimal(10), new Decimal(0.5)]
         },
         itemCostScales: {
-            building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.5)],
+            building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
             upgrade: [new Decimal(2.5), new Decimal(250), new Decimal(2)]
         },
         itemAmountCaps: {
