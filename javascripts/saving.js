@@ -62,6 +62,7 @@ function onLoad() { // Put your savefile updating codes here
     changeTab(player.storyId<6?"generator":"buildings")
     refreshItems()
     refreshMoleculeReq()
+    refreshCrankStats()
     updateAllUpgradeEffect()
     updateTabDisplay()
 }

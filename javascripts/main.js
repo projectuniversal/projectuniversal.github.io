@@ -24,7 +24,7 @@ function getDefaultPlayer() {
         },
         itemCostScales: {
             building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
-            upgrade: [new Decimal(2.5), new Decimal(250), new Decimal(2), new Decimal(1)]
+            upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(2), new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
@@ -34,10 +34,15 @@ function getDefaultPlayer() {
         moleculeGained: new Decimal(0),
         moleculeNextReq: new Decimal(2e3),
         moleculeReqScale: new Decimal(2.5),
+        crankSpeed: new Decimal(0),
+        crankSpeedCap: new Decimal(100),
+        crankSpinPower: new Decimal(5),
+        crankSlowdownRate: new Decimal(10),
+        crankSpeedDelta: new Decimal(0),
+        crankMaxDelta: new Decimal(50),
         version: 8
     }
 }
-getElement = document.getElementById.bind(document)
 
 let diffMultiplier = 1 // The infamous cheating variable from Nyan Cat
 let gameLoopIntervalId = 0
@@ -74,10 +79,6 @@ setOnclick("genActivateBtn", function() {
 })
 setOnclick("particleClickGain",createParticle)
 
-function setOnclick(id,func) {
-  getElement(id).onclick = func
-}
-
 function startInterval() {
   gameLoopIntervalId = setInterval(gameLoop, 10)
 }
@@ -111,14 +112,6 @@ function startGame() {
 function endPrologue() {
   player.storyId = Math.min(6,player.storyId+1)
   changeTab("buildings")
-}
-
-function updateElement(id,text) {
-  getElement(id).innerHTML = text
-}
-
-function decideElementDisplay(id,bool) {
-  getElement(id).style.display = bool?"":"none"
 }
 
 function changeTab(tabName) {
@@ -175,6 +168,7 @@ function particlePerSec() {
   for (i=0;i<player.itemAmounts.building.length;i++) {
     ret = ret.plus(player.itemAmounts.building[i].times(player.itemPowers.building[i]))
   }
+  ret = ret.times(getCrankBoost())
   return ret
 }
 
@@ -374,8 +368,16 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     checkMoleculeGain()
   }
 
+  // Crank speed handle
+  if (player.storyId>=12) {
+    player.crankSpeedDelta = player.crankSpeedDelta.minus(player.crankSlowdownRate.div(1000).times(diff))
+    player.crankSpeed = Decimal.min(player.crankSpeedCap, Decimal.max(new Decimal(0), player.crankSpeed.plus(player.crankSpeedDelta.div(1000).times(diff))))
+    if (player.crankSpeed.eq(0)) player.crankSpeedDelta = new Decimal(0)
+  }
+
   // Update all display
   updateUpgrades()
+  updateCrankSpeedBar()
   updateElement("timeTillNextAtom", shortenMoney(player.mergeInterval-player.mergeTime))
   updateElement("atomCount", `You have ${shortenMoney(player.storyId<=5?prologueAtom:player.atom)} Atoms`)
   updateElement("storyDisplay", storyTexts[player.storyId])
@@ -384,16 +386,21 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   updateElement("particleClickGain", `Create ${shortenMoney(player.particleCreatePower)} Particles`)
   updateElement("moleculeAmount", shortenMoney(player.molecule))
   updateElement("moleculeNextReqDisplay", shortenMoney(player.moleculeNextReq))
+  updateElement("crankSpeedDisplay", shortenMoney(player.crankSpeed))
+  updateElement("crankBoostDisplay", shortenMoney(getCrankBoost()))
+  updateElement("particlePerSecDisplay", shortenMoney(particlePerSec()))
   decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
   decideElementDisplay("particleClickGainContainer", player.storyId>=6)
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
+  decideElementDisplay("particlePerSecDisplayContainer", particlePerSec().gt(0))
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
   decideElementDisplay("moleculeDisplayContainer", player.storyId>=10)
   decideElementDisplay("upg2Container", player.storyId>=10)
   decideElementDisplay("upg3Container", player.storyId>=11)
   decideElementDisplay("cranksTabBtn", player.storyId>=12)
+  decideElementDisplay("crankEffectDisplayContainer", player.storyId>=12)
   player.lastUpdate = thisUpdate
 }
