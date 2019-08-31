@@ -1,13 +1,14 @@
-getElement = document.getElementById.bind(document)
+isElement=function(a){try{return a.constructor.__proto__.prototype.constructor.name?!0:!1}catch(b){return!1}};
+getElement=function(a){return isElement(a)?a:document.getElementById(a)}
 
-function setOnclick(id,func) {
-  getElement(id).onclick = func
+function setOnclick(element,func) {
+  getElement(element).onclick = func
 }
 
-function updateElement(id,text) {
-  getElement(id).innerHTML = text
+function updateElement(element,text) {
+  getElement(element).innerHTML = text
 }
 
-function decideElementDisplay(id,bool) {
-  getElement(id).style.display = bool?"":"none"
+function decideElementDisplay(element,bool) {
+  getElement(element).style.display = bool?"":"none"
 }
