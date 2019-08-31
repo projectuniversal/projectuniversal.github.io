@@ -332,53 +332,11 @@ function checkMoleculeGain() {
   }
 }
 
-function gameLoop(diff) { // 1 diff = 0.001 seconds
-  // Diff handle
-  var thisUpdate = new Date().getTime()
-  if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
-  diff *= diffMultiplier
-  if (diffMultiplier > 1) console.log("SHAME")
-  else if (diffMultiplier < 1) console.log("SLOWMOTION")
-
-  // Prologue Atom handle
-  if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
-  if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
-    player.storyId = 5
-    prologueAtom = new Decimal("1e80")
-  }
-  if (player.storyId == 5) {
-    if (prologueAtom.lte(0.5)) endPrologue()
-    prologueAtom = Decimal.pow10(prologueAtom.log10()-0.008*diff)
-  }
-
-  // Atom Merger handle
-  if (player.storyId > 5) {
-    updateBuildings()
-    player.particleAmount = Decimal.min(player.particleCap, player.particleAmount.plus(particlePerSec().times(diff).div(1000)))
-    player.mergeTime += diff*0.001
-    if (player.particleAmount.lt(player.particleAtomRatio)) {
-      player.mergeTime = 0
-    } else if (player.mergeTime>=player.mergeInterval) {
-      let atomToAdd = Decimal.floor(Decimal.min(player.particleAmount.div(player.particleAtomRatio), player.mergePower.times(player.mergeTime/player.mergeInterval)))
-      player.mergeTime = Math.max(0, player.mergeTime-player.mergeInterval*atomToAdd)
-      player.particleAmount = player.particleAmount.sub(atomToAdd.times(player.particleAtomRatio))
-      player.atom = player.atom.plus(atomToAdd)
-    }
-    checkMilestone()
-    checkMoleculeGain()
-  }
-
-  // Crank speed handle
-  if (player.storyId>=12) {
-    player.crankSpeedDelta = player.crankSpeedDelta.minus(player.crankSlowdownRate.div(1000).times(diff))
-    player.crankSpeed = Decimal.min(player.crankSpeedCap, Decimal.max(new Decimal(0), player.crankSpeed.plus(player.crankSpeedDelta.div(1000).times(diff))))
-    if (player.crankSpeed.eq(0)) player.crankSpeedDelta = new Decimal(0)
-  }
-
-  // Update all display
+function updateAllDisplay() {
   updateUpgrades()
   updateCrankSpeedBar()
-  updateElement("timeTillNextAtom", shortenMoney(player.mergeInterval-player.mergeTime))
+  let temp = player.mergeInterval-player.mergeTime
+  updateElement("timeTillNextAtom", temp<=0?"any":shortenMoney(temp))
   updateElement("atomCount", `You have ${shortenMoney(player.storyId<=5?prologueAtom:player.atom)} Atoms`)
   updateElement("storyDisplay", storyTexts[player.storyId])
   updateElement("particleAmount", shortenMoney(player.particleAmount))
@@ -402,5 +360,54 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   decideElementDisplay("upg3Container", player.storyId>=11)
   decideElementDisplay("cranksTabBtn", player.storyId>=12)
   decideElementDisplay("crankEffectDisplayContainer", player.storyId>=12)
+}
+
+function gameLoop(diff) { // 1 diff = 0.001 seconds
+  // Diff handle
+  var thisUpdate = new Date().getTime()
+  if (typeof diff === 'undefined') var diff = Math.min(thisUpdate - player.lastUpdate, 21600000);
+  diff *= diffMultiplier
+  if (diffMultiplier > 1) console.log("SHAME")
+  else if (diffMultiplier < 1) console.log("SLOWMOTION")
+
+  // Prologue Atom handle
+  if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
+  if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
+    player.storyId = 5
+    prologueAtom = new Decimal("1e80")
+  }
+  if (player.storyId == 5) {
+    if (prologueAtom.lte(0.5)) endPrologue()
+    prologueAtom = Decimal.pow10(prologueAtom.log10()-0.008*diff)
+  }
+
+  // Atom Merger handle
+  if (player.storyId > 5) {
+    updateBuildings()
+    player.particleAmount = player.particleAmount.plus(particlePerSec().times(diff).div(1000))
+    player.mergeTime += diff*0.001
+    if (player.particleAmount.lt(player.particleAtomRatio)) {
+      player.mergeTime = 0
+    } else if (player.mergeTime>=player.mergeInterval) {
+      let atomToAdd = Decimal.floor(Decimal.min(player.particleAmount.div(player.particleAtomRatio), player.mergePower.times(player.mergeTime/player.mergeInterval)))
+      player.mergeTime = Math.max(0, player.mergeTime-player.mergeInterval*atomToAdd)
+      player.particleAmount = player.particleAmount.sub(atomToAdd.times(player.particleAtomRatio))
+      player.atom = player.atom.plus(atomToAdd)
+    }
+    player.particleAmount = Decimal.min(player.particleCap, player.particleAmount)
+    checkMilestone()
+    checkMoleculeGain()
+  }
+
+  // Crank speed handle
+  if (player.storyId>=12) {
+    player.crankSpeedDelta = player.crankSpeedDelta.minus(player.crankSlowdownRate.div(1000).times(diff))
+    player.crankSpeed = Decimal.min(player.crankSpeedCap, Decimal.max(new Decimal(0), player.crankSpeed.plus(player.crankSpeedDelta.div(1000).times(diff))))
+    if (player.crankSpeed.eq(0)) player.crankSpeedDelta = new Decimal(0)
+  }
+
+  // Update all display
+  updateAllDisplay()
+
   player.lastUpdate = thisUpdate
 }
