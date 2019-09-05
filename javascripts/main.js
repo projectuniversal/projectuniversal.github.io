@@ -105,6 +105,7 @@ function hardReset() {
 function startGame() {
   let savefile = localStorage.getItem(saveName)
   if (!(savefile === null)) loadGame(savefile)
+  else onLoad()
   startInterval()
   setInterval(saveGame,5000)
 }
