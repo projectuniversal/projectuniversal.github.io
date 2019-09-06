@@ -366,7 +366,7 @@ function updateAllDisplay() {
   updateElement("particleCap", shortenMoney(player.particleCap))
   updateElement("particleClickGain", `Create ${shortenMoney(player.particleCreatePower)} Particles`)
   updateElement("moleculeAmount", shortenMoney(player.molecule))
-  updateElement("moleculeNextReqDisplay", shortenMoney(player.moleculeNextReq))
+  // updateElement("moleculeNextReqDisplay", shortenMoney(player.moleculeNextReq))
   updateElement("crankSpeedDisplay", shortenMoney(player.crankSpeed))
   updateElement("crankBoostDisplay", shortenMoney(getCrankBoost()))
   updateElement("particlePerSecDisplay", shortenMoney(particlePerSec()))
