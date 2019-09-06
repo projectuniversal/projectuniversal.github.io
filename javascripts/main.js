@@ -386,7 +386,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   else if (diffMultiplier < 1) console.log("SLOWMOTION")
 
   // Prologue Atom handle
-  if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("1e78").times(diff/1000))
+  if (player.storyId == 4 && prologueGenActivated) prologueAtom = prologueAtom.plus(new Decimal("2e78").times(diff/1000))
   if (player.storyId == 4 && prologueAtom.gte(new Decimal("1e80"))) {
     player.storyId = 5
     prologueAtom = new Decimal("1e80")
