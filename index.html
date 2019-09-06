@@ -27,7 +27,7 @@
                 </div>
             </div>
         </nav>
-        <div class="container" style="margin: 0px;"><span style="font-size: 25px;margin: 19px;" id="storyDisplay">Tier 1 unlocked! (WIP)</span></div>
+        <div class="container" style="margin: 0px;"><span style="font-size: 25px;margin: 19px;" id="storyDisplay">Game still loading or broke!</span></div>
         <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary" type="button" style="margin: -1px;" id="storyNext">Click to Continue</button></div>
         <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;" id="atomCount">You have 0 atoms</span></div>
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="moleculeDisplayContainer"><span style="color: rgb(141,150,157);">You have <span id="moleculeAmount">0</span> molecule, next molecule at <span id="moleculeNextReqDisplay">5e3</span> Atoms</div>
@@ -40,6 +40,7 @@
             <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
             <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
             <li class="nav-item" id="cranksTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('cranks')">Cranks</a></li>
+            <li class="nav-item" id="loreTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('lore')">Lore</a></li>
             <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
         </ul>
         <div class="table-responsive">
@@ -139,6 +140,9 @@
             <br>
             <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="spinCrank()">Spin the Crank</button></div>
 
+        </div>
+        <div class="container" style="margin: 0px 0px;" id="loreTab" style="diplay:none">
+            <div class="container" style="margin: 0px;"><span style="font-size: 25px;" id="loreDisplay"></span></div>
         </div>
         <div class="container" style="margin: 0px 0px;" id="optionsTab" style="diplay:none">
             <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="saveGame()">Save now</button>

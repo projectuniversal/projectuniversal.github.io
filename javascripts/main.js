@@ -59,13 +59,14 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Building unlocked, next stage at 50 atoms",
                   "Upgrades unlocked, next stage at 100 atoms",
                   "Tier 1 unlocked, next stage at 2e3 atoms",
-                  "Unnamed currency unlocked, next stage at 1e4 atoms.",
+                  "Molecules unlocked, next stage at 1e4 atoms.",
                   "Tier 2 unlocked, next stage when upgrade bought.",
                   "Cranks unlocked, end of content."]
 let displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
     upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "More efficient Atom merging", "The Cranks"]
 }
+let existingTabNames = ["generator","buildings","upgrades","cranks","lore","options"]
 let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
@@ -121,7 +122,6 @@ function changeTab(tabName) {
 }
 
 function updateTabDisplay() {
-    let existingTabNames = ["generator","buildings","upgrades","cranks","options"]
     existingTabNames.forEach(function(name) {
         let toDisplay = name==currentTab && getElement(`${name}TabBtn`).style.display==="" && player.storyId>=4
         decideElementDisplay(`${name}Tab`, toDisplay)
@@ -349,9 +349,15 @@ function checkMoleculeGain() {
   }
 }
 
+function updateLoreDisplay() {
+  let loreText = player.storyId>=6?storyTexts.slice(6,player.storyId+1).join("<br><br>"):"How did you get here?"
+  getElement("loreDisplay").innerHTML = loreText
+}
+
 function updateAllDisplay() {
   updateUpgrades()
   updateCrankSpeedBar()
+  updateLoreDisplay()
   let temp = player.mergeInterval-player.mergeTime
   updateElement("timeTillNextAtom", temp<=0?"any":shortenMoney(temp))
   updateElement("atomCount", `You have ${shortenMoney(player.storyId<=5?prologueAtom:player.atom)} Atoms`)
@@ -370,6 +376,7 @@ function updateAllDisplay() {
   decideElementDisplay("particleClickGainContainer", player.storyId>=6)
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
+  decideElementDisplay("loreTabBtn", player.storyId>=6)
   decideElementDisplay("particlePerSecDisplayContainer", particlePerSec().gt(0))
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
   decideElementDisplay("moleculeDisplayContainer", player.storyId>=10)
@@ -421,8 +428,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     if (player.crankSpeed.eq(0)) player.crankSpeedDelta = new Decimal(0)
   }
 
-  // Update all display
+  // Finishing up
   updateAllDisplay()
-
   player.lastUpdate = thisUpdate
 }
