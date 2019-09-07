@@ -45,5 +45,5 @@ function refreshCrankStats() {
 }
 
 function getCrankBoost() {
-  return player.crankSpeed.div(10).plus(1)
+  return player.crankSpeed.div(100).plus(1)
 }
