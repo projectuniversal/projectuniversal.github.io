@@ -38,6 +38,8 @@ function getDefaultPlayer() {
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
         expSpendPercent: 0,
+        expParticleSpent: new Decimal(0),
+        expCurrentId: -1,
         crankSpeed: new Decimal(0),
         crankSpeedCap: new Decimal(100),
         crankSpinPower: new Decimal(5),
@@ -167,13 +169,15 @@ function checkMilestone() {
   }
 }
 
-function particlePerSec() {
+function particlePerSec(total = false) {
   let ret = new Decimal(0)
   for (i=0;i<player.itemAmounts.building.length;i++) {
     ret = ret.plus(player.itemAmounts.building[i].times(player.itemPowers.building[i]))
   }
   ret = ret.times(getCrankBoost())
-  return ret
+  if (total) return ret
+  if (player.expCurrentId == -1) return [ret, new Decimal(0)]
+  return [ret.times(1-(player.expSpendPercent/100)), ret.times(player.expSpendPercent/100)]
 }
 
 function getCurrentTier() {
@@ -261,7 +265,8 @@ function updateAllDisplay() {
   // updateElement("moleculeNextReqDisplay", shortenMoney(player.moleculeNextReq))
   updateElement("crankSpeedDisplay", shortenMoney(player.crankSpeed))
   updateElement("crankBoostDisplay", shortenMoney(getCrankBoost()))
-  updateElement("particlePerSecDisplay", shortenMoney(particlePerSec()))
+  updateElement("particlePerSecDisplay", shortenMoney(particlePerSec(true)))
+  updateElement("expStat", getExpStat())
   decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
@@ -270,11 +275,21 @@ function updateAllDisplay() {
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("loreTabBtn", player.storyId>=6)
-  decideElementDisplay("particlePerSecDisplayContainer", particlePerSec().gt(0))
+  decideElementDisplay("particlePerSecDisplayContainer", particlePerSec(true).gt(0))
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
   decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
   decideElementDisplay("cranksTabBtn", player.itemAmounts.upgrade[4].neq(0))
   decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
+}
+
+function getArrayTypeList() {
+  let ret = {};
+  ["building","upgrade","exp"].forEach(function(itemType) {
+    ["itemAmounts","itemCosts","itemPowers","itemCostScales","itemAmountCaps"].forEach(function(itemProperty) {
+      ret[`${itemProperty}.${itemType}`] = "Decimal"
+    })
+  })
+  return ret
 }
 
 function gameLoop(diff) { // 1 diff = 0.001 seconds
@@ -296,9 +311,9 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     prologueAtom = Decimal.pow10(prologueAtom.log10()-0.008*diff)
   }
 
-  // Atom Merger handle
+  // Particle and Atom Merger handle
   if (player.storyId > 5) {
-    player.particle = player.particle.plus(particlePerSec().times(diff).div(1000))
+    player.particle = player.particle.plus(particlePerSec()[0].times(diff).div(1000))
     player.mergeTime += diff*0.001
     if (player.particle.lt(player.particleAtomRatio)) {
       player.mergeTime = 0
@@ -310,6 +325,16 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     }
     player.particle = Decimal.min(player.particleCap, player.particle)
     checkMilestone()
+  }
+
+  // Exp handle
+  if (player.expCurrentId != -1) {
+    player.expParticleSpent = player.expParticleSpent.plus(particlePerSec()[1].times(diff).div(1000))
+    if (player.expParticleSpent.gte(player.itemCosts.exp[player.expCurrentId])) {
+      player.expParticleSpent = new Decimal(0)
+      player.itemAmounts.exp[player.expCurrentId] = player.itemAmounts.exp[player.expCurrentId].plus(1)
+      player.expCurrentId = -1
+    }
   }
 
   // Crank speed handle
