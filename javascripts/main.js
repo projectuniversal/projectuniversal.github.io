@@ -6,32 +6,38 @@ function getDefaultPlayer() {
         mergeTime: 0,
         mergeInterval: 1,
         mergePower: new Decimal(1),
-        particleAmount: new Decimal(0),
+        particle: new Decimal(0),
         particleCap: new Decimal(20),
         particleCreatePower: new Decimal(2),
         particleAtomRatio: new Decimal(3),
         itemAmounts: {
-            building: [new Decimal(0), new Decimal(0), new Decimal(0)],
-            upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)]
+          building: [new Decimal(0), new Decimal(0), new Decimal(0)],
+          upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+          exp: [new Decimal(0)]
         },
         itemCosts: {
-            building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
-            upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2)]
+          building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
+          upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2)],
+          exp: [new Decimal(100)]
         },
         itemPowers: {
-            building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
-            upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0)]
+          building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
+          upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0)],
+          exp: [new Decimal(0)]
         },
         itemCostScales: {
-            building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
-            upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1)]
+          building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
+          upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1)],
+          exp: [new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
-          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1)]
+          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1)],
+          exp: [new Decimal(-1)]
         },
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
+        expSpendPercent: 0,
         crankSpeed: new Decimal(0),
         crankSpeedCap: new Decimal(100),
         crankSpinPower: new Decimal(5),
@@ -60,10 +66,6 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Experiments unlocked.",
                   "Tier 2 unlocked.",
                   "Cranks unlocked, end of content."]
-let displayNames = {
-    building: ["Particle constructor", "T1 Building", "T2 Building"],
-    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Experiment facility", "More efficient Atom merging", "The Cranks"]
-}
 let existingTabNames = ["generator","buildings","upgrades","exp","cranks","lore","options"]
 let currentTab = "buildings"
 
@@ -77,6 +79,9 @@ setOnclick("genActivateBtn", function() {
     prologueGenActivated = true
 })
 setOnclick("particleClickGain",createParticle)
+getElement("expSpendPercent").oninput = function() {
+  player.expSpendPercent = this.value
+}
 
 function startInterval() {
   gameLoopIntervalId = setInterval(gameLoop, 10)
@@ -132,8 +137,8 @@ function skipPrologue() {
 }
 
 function createParticle() {
-  let addAmount = Decimal.min(player.particleCap.sub(player.particleAmount),player.particleCreatePower)
-  player.particleAmount = player.particleAmount.plus(addAmount)
+  let addAmount = Decimal.min(player.particleCap.sub(player.particle),player.particleCreatePower)
+  player.particle = player.particle.plus(addAmount)
 }
 
 function checkMilestone() {
@@ -193,7 +198,7 @@ function canBuyItem(id, type) {
     case "building":
       return player.atom.gte(Decimal.ceil(player.itemCosts.building[id]))
     case "upgrade":
-      return player[getUpgradeCostCurrencyName(id, type)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
+      return player[getItemCostCurrencyName(type, id)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
     default:
       return false
   }
@@ -201,7 +206,7 @@ function canBuyItem(id, type) {
 
 function buyItem(id, type) {
   if (type == "building" && getCurrentTier()<id) return;
-  let currency = getUpgradeCostCurrencyName(id, type)
+  let currency = getItemCostCurrencyName(type, id)
   if (canBuyItem(id, type)) {
     player.itemAmounts[type][id] = player.itemAmounts[type][id].plus(1)
     player[currency] = player[currency].sub(Decimal.ceil(player.itemCosts[type][id]))
@@ -214,20 +219,6 @@ function getBuildingState(id) {
     if (getCurrentTier() < id) return "Locked"
     if (player.atom.lt(Decimal.ceil(player.itemCosts.building[id]))) return "Can't afford"
     return "Buy"
-}
-
-function updateBuildings() {
-    Array.from(getElement("buildingRows").rows).forEach((tr, id) => {
-        tr.cells[0].innerHTML = `${displayNames.building[id]}${player.itemAmounts.building[id].gt(0)?" (Owned "+shortenMoney(player.itemAmounts.building[id])+")":""}`
-        tr.cells[1].innerHTML = `${shortenMoney(player.itemPowers.building[id])} particle/s`
-        tr.cells[2].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.building[id]))} Atoms`
-        let buyButton = tr.cells[3].childNodes[0]
-        let buildingState = getBuildingState(id)
-        buyButton.innerHTML = getBuildingState(id)
-        buyButton.classList.toggle("btn-success", buildingState=="Buy")
-        buyButton.classList.toggle("btn-danger", buildingState=="Can't afford")
-        buyButton.classList.toggle("btn-secondary", buildingState=="Locked")
-    })
 }
 
 function resetValues(names) {
@@ -253,14 +244,17 @@ function updateLoreDisplay() {
 }
 
 function updateAllDisplay() {
-  updateUpgrades()
+  updateItemTable("building")
+  updateItemTable("upgrade")
+  updateItemTable("exp")
   updateCrankSpeedBar()
   updateLoreDisplay()
+  updateDisposePercent()
   let temp = player.mergeInterval-player.mergeTime
   updateElement("timeTillNextAtom", temp<=0?"any":shortenMoney(temp))
   updateElement("atomCount", `You have ${shortenMoney(player.storyId<=5?prologueAtom:player.atom)} Atoms`)
   updateElement("storyDisplay", storyTexts[player.storyId])
-  updateElement("particleAmount", shortenMoney(player.particleAmount))
+  updateElement("particle", shortenMoney(player.particle))
   updateElement("particleCap", shortenMoney(player.particleCap))
   updateElement("particleClickGain", `Create ${shortenMoney(player.particleCreatePower)} Particles`)
   updateElement("moleculeAmount", shortenMoney(player.molecule))
@@ -304,18 +298,17 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
 
   // Atom Merger handle
   if (player.storyId > 5) {
-    updateBuildings()
-    player.particleAmount = player.particleAmount.plus(particlePerSec().times(diff).div(1000))
+    player.particle = player.particle.plus(particlePerSec().times(diff).div(1000))
     player.mergeTime += diff*0.001
-    if (player.particleAmount.lt(player.particleAtomRatio)) {
+    if (player.particle.lt(player.particleAtomRatio)) {
       player.mergeTime = 0
     } else if (player.mergeTime>=player.mergeInterval) {
-      let atomToAdd = Decimal.floor(Decimal.min(player.particleAmount.div(player.particleAtomRatio), player.mergePower.times(player.mergeTime/player.mergeInterval)))
+      let atomToAdd = Decimal.floor(Decimal.min(player.particle.div(player.particleAtomRatio), player.mergePower.times(player.mergeTime/player.mergeInterval)))
       player.mergeTime = Math.max(0, player.mergeTime-player.mergeInterval*atomToAdd)
-      player.particleAmount = player.particleAmount.sub(atomToAdd.times(player.particleAtomRatio))
+      player.particle = player.particle.sub(atomToAdd.times(player.particleAtomRatio))
       player.atom = player.atom.plus(atomToAdd)
     }
-    player.particleAmount = Decimal.min(player.particleCap, player.particleAmount)
+    player.particle = Decimal.min(player.particleCap, player.particle)
     checkMilestone()
   }
 

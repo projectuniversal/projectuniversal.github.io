@@ -32,7 +32,7 @@
         <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary" type="button" style="margin: -1px;" id="storyNext">Click to Continue</button></div>
         <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;" id="atomCount">You have 0 atoms</span></div>
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="moleculeDisplayContainer"><span style="color: rgb(141,150,157);">You have <span id="moleculeAmount">0</span> molecules</div>
-        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="atomCountContainer"><span style="color: rgb(141,150,157);">There are <span id="particleAmount">0</span>/<span id="particleCap">10</span> Particles, next Particle merging in <span id="timeTillNextAtom">1</span> seconds</span></div>
+        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="atomCountContainer"><span style="color: rgb(141,150,157);">There are <span id="particle">0</span>/<span id="particleCap">10</span> Particles, next Particle merging in <span id="timeTillNextAtom">1</span> seconds</span></div>
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="crankEffectDisplayContainer"><span style="color: rgb(141,150,157);">Your crank is spinning at a speed of <span id="crankSpeedDisplay">?</span>, translated to <span id="crankBoostDisplay">?</span>x effectiveness for your buildings</div>
         <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="particlePerSecDisplayContainer"><span style="color: rgb(141,150,157);">Your buildings are producing <span id="particlePerSecDisplay">?</span> particles per second</div>
         <div class="container" style="margin: 1.5625%;" id="particleClickGainContainer"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="particleClickGain">Create 2 Particles</button></div>
@@ -92,7 +92,6 @@
             </div>
         </div>
         <div class="container" style="margin: 0px 0px;" id="upgradesTab" style="diplay:none">
-            <span style="font-size: 25px;margin: 19px;">More upgrades are to be added.</span>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -145,7 +144,32 @@
             </div>
         </div>
         <div class="container" style="margin: 0px 0px;" id="expTab" style="diplay:none">
-            <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;">This feature is still under development.</span></div>
+          <div class="slidecontainer">
+            <input type="range" min="0" max="100" value="0" class="slider" id="expSpendPercent">
+            <span id="expSpendPercentDisplay">Disposing 0% of particles gained into experiments</span>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Name</th>
+                            <th style="width: 20%;">Description</th>
+                            <th style="width: 20%;">Effect</th>
+                            <th style="width: 20%;">Particles needed</th>
+                            <th style="width: 20%;"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="expRows">
+                        <tr>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;">The exp mechanic tester</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'upgrade')">Start</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          </div>
         </div>
         <div class="container" style="margin: 0px 0px;" id="cranksTab" style="diplay:none">
             <div class="container" id="crankSpeedBar" style="margin: 0px 0px;"></div>
@@ -168,6 +192,8 @@
         <script src="javascripts/display.js"></script>
         <script src="javascripts/format.js"></script>
         <script src="javascripts/upgrade.js"></script>
+        <script src="javascripts/exp.js"></script>
+        <script src="javascripts/item.js"></script>
         <script src="javascripts/main.js"></script>
         <script src="javascripts/crank.js"></script>
         <script src="javascripts/saving.js"></script>
