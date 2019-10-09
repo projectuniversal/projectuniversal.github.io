@@ -6,19 +6,7 @@ let initPlayerFunctionName = "getDefaultPlayer"
 let playerVarName = "player" // DO NOT USE THE WORD "SAVE"
 let importDangerAlertText = "Your imported save seems to be missing some values, which means importing this save might be destructive, if you have made a backup of your current save and are sure about importing this save please press OK, if not, press cancel and the save will not be imported."
 let versionTagName = "version"
-let arrayTypes = { // For EACH array in your player variable, put a key/value to define its type like I did below
-  "buildingAmounts": "Decimal", // Needed to load savefile below version 5
-  "itemAmounts.building": "Decimal",
-  "itemCosts.building": "Decimal",
-  "itemPowers.building": "Decimal",
-  "itemCostScales.building": "Decimal",
-  "itemAmounts.upgrade": "Decimal",
-  "itemCosts.upgrade": "Decimal",
-  "itemPowers.upgrade": "Decimal",
-  "itemCostScales.upgrade": "Decimal",
-  "itemAmountCaps.building": "Decimal",
-  "itemAmountCaps.upgrade": "Decimal"
-}
+let arrayTypes = getArrayTypeList() // TFW you make code to hardcode for you
 
 function onImportError() {
     alert("Error: Imported save is in invalid format, please make sure you've copied the save correctly and isn't just typing gibberish.")

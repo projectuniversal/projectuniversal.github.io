@@ -20,6 +20,10 @@ function formatValue(value, places, placesUnder1000) {
     }
 }
 
+function formatPercent(value) {
+  return `${value.times(100).toFixed(1)}%`
+}
+
 shorten = function (money) {
   return formatValue(money, 2, 2);
 };

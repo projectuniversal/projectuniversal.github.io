@@ -74,7 +74,7 @@ function updateItemTable(type) {
         let showThisItem = showItem(type,id)
         decideElementDisplay(tr, showThisItem)
         if (showThisItem) {
-          tr.cells[0].innerHTML = `${displayNames[type][id]} ${player.itemAmounts[type][id].gt(0)?`(${foo[type]} ${shortenMoney(player.itemAmounts.upgrade[id])})`:""}`
+          tr.cells[0].innerHTML = `${displayNames[type][id]} ${player.itemAmounts[type][id].gt(0)?`(${foo[type]} ${shortenMoney(player.itemAmounts[type][id])})`:""}`
           tr.cells[type == "building"?1:2].innerHTML = getItemEffectDisplay(type, id)
           tr.cells[type == "building"?2:3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts[type][id]))} ${getItemCostCurrencyName(type, id)}s`
           let buyButton = tr.cells[type == "building"?3:4].childNodes[0]
