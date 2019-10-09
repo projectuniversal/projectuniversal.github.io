@@ -12,35 +12,33 @@ function getDefaultPlayer() {
         particleAtomRatio: new Decimal(3),
         itemAmounts: {
             building: [new Decimal(0), new Decimal(0), new Decimal(0)],
-            upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)]
+            upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)]
         },
         itemCosts: {
             building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
-            upgrade: [new Decimal(50), new Decimal(200), new Decimal(1), new Decimal(2)]
+            upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2)]
         },
         itemPowers: {
             building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
-            upgrade: [new Decimal(2), new Decimal(10), new Decimal(0.5), new Decimal(0)]
+            upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0)]
         },
         itemCostScales: {
             building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
-            upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(2), new Decimal(1)]
+            upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
-          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(4), new Decimal(1)]
+          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1)]
         },
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
-        moleculeNextReq: new Decimal(2e3),
-        moleculeReqScale: new Decimal(2.5),
         crankSpeed: new Decimal(0),
         crankSpeedCap: new Decimal(100),
         crankSpinPower: new Decimal(5),
         crankSlowdownRate: new Decimal(10),
         crankSpeedDelta: new Decimal(0),
         crankMaxDelta: new Decimal(50),
-        version: 8
+        version: 9
     }
 }
 
@@ -59,14 +57,14 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Building unlocked.",
                   "Upgrades unlocked.",
                   "Tier 1 unlocked.",
-                  "Molecules unlocked.",
+                  "Experiments unlocked.",
                   "Tier 2 unlocked.",
                   "Cranks unlocked, end of content."]
 let displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
-    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "More efficient Atom merging", "The Cranks"]
+    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Experiment facility", "More efficient Atom merging", "The Cranks"]
 }
-let existingTabNames = ["generator","buildings","upgrades","cranks","lore","options"]
+let existingTabNames = ["generator","buildings","upgrades","exp","cranks","lore","options"]
 let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
@@ -93,9 +91,9 @@ function importGame() {
     loadGame(prompt("Please paste your exported save below:"),true)
 }
 
-function hardReset() {
-    if (confirm("Are you sure about reset ALL of your progress?")) {
-        if (confirm("Do you REALLY sure? This is the LAST confirmation!")) {
+function hardReset(forced = false) {
+    if (forced || confirm("Are you sure about reset ALL of your progress?")) {
+        if (forced || confirm("Do you REALLY sure? This is the LAST confirmation!")) {
             player = getDefaultPlayer()
             saveGame()
             location.reload()
@@ -151,13 +149,13 @@ function checkMilestone() {
       if (player.atom.gte(100)) player.storyId++
       break;
     case 9:
-      if (player.atom.gte(2e3)) player.storyId++
+      if (player.itemAmounts.upgrade[2].neq(0)) player.storyId++
       break;
     case 10:
       if (player.atom.gte(1e4)) player.storyId++
       break;
     case 11:
-      if (player.itemAmounts.upgrade[3].gt(0)) player.storyId++
+      if (player.itemAmounts.upgrade[4].gt(0)) player.storyId++
       break;
     default:
       return;
@@ -183,39 +181,10 @@ function getCurrentTier() {
           return 1;
         case 11:
         case 12:
+        case 13:
           return 2;
         default:
           return -1;
-    }
-}
-
-function updateAllUpgradeEffect() {
-    for (let i=0;i<player.itemAmounts.upgrade.length;i++) {
-        updateUpgradeEffect(i)
-    }
-}
-
-function getUpgradeEffect(id) {
-    switch (id) {
-        case 0:
-        case 1:
-          return Decimal.pow(player.itemPowers.upgrade[id], player.itemAmounts.upgrade[id])
-        case 2:
-          return Decimal.min(player.itemPowers.upgrade[id].times(player.itemAmounts.upgrade[id]),2.5)
-    }
-}
-
-function updateUpgradeEffect(id) {
-    switch (id) {
-        case 0:
-          player.mergePower = getUpgradeEffect(0)
-          break;
-        case 1:
-          resetValues(["particleCap"])
-          player.particleCap = player.particleCap.times(getUpgradeEffect(1))
-        case 2:
-          resetValues(["particleAtomRatio"])
-          player.particleAtomRatio = player.particleAtomRatio.sub(getUpgradeEffect(2))
     }
 }
 
@@ -261,62 +230,6 @@ function updateBuildings() {
     })
 }
 
-function getUpgradeCostCurrencyName(id, type) {
-  if (type == "building") return "atom"
-  switch (id) {
-    case 0:
-    case 1:
-      return "atom"
-    case 2:
-    case 3:
-      return "molecule"
-  }
-}
-
-function getUpgradeEffectDisplay(id) {
-  switch (id) {
-    case 0:
-    case 1:
-      return `${shortenMoney(getUpgradeEffect(id))}x`
-      break;
-    case 2:
-      return `${new Decimal(3).sub(getUpgradeEffect(id))}:1`
-    case 3:
-      return "Unlocks the Cranks"
-  }
-}
-
-function showUpgrade(id) {
-  if (player.itemAmounts.upgrade[id].eq(player.itemAmountCaps.upgrade[id]) && true) return false // Change true to bool when a toggle exists
-  switch (id) {
-    case 2:
-      return player.storyId>=10
-    case 3:
-      return player.storyId>=11
-    default:
-      return true
-  }
-}
-
-function updateUpgrades() {
-    Array.from(getElement("upgradeRows").rows).forEach((tr, id) => {
-        let showThisUpgrade = showUpgrade(id)
-        decideElementDisplay(tr, showThisUpgrade)
-        if (showThisUpgrade) {
-          tr.cells[0].innerHTML = `${displayNames.upgrade[id]}${player.itemAmounts.upgrade[id].gt(0)?" (Owned "+shortenMoney(player.itemAmounts.upgrade[id])+")":""}`
-          tr.cells[2].innerHTML = getUpgradeEffectDisplay(id)
-          tr.cells[3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts.upgrade[id]))} ${getUpgradeCostCurrencyName(id, "upgrade")}s`
-          let buyButton = tr.cells[4].childNodes[0]
-          let availability = player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyItem(id, "upgrade")?2:1:0
-          let displayTexts = ["Maxed", "Can't afford", "Buy"]
-          buyButton.innerHTML = displayTexts[availability]
-          buyButton.classList.toggle("btn-success", availability==2)
-          buyButton.classList.toggle("btn-danger", availability==1)
-          buyButton.classList.toggle("btn-info", availability===0)
-        }
-    })
-}
-
 function resetValues(names) {
     let reference = getDefaultPlayer()
     names.forEach(function(name) {
@@ -332,21 +245,6 @@ function refreshItems() {
             else player.itemCosts[itemType][i] = player.itemCosts[itemType][i].times(Decimal.pow(player.itemCostScales[itemType][i],player.itemAmounts[itemType][i]))
         }
     })
-}
-
-function refreshMoleculeReq() {
-  resetValues(["moleculeNextReq", "moleculeReqScale"])
-  player.moleculeNextReq = player.moleculeNextReq.times(Decimal.pow(player.moleculeReqScale, player.moleculeGained))
-}
-
-function checkMoleculeGain() {
-  let failsafe = 0
-  while (failsafe < 100 && player.moleculeNextReq.lte(player.atom)) {
-    player.molecule = player.molecule.plus(1)
-    player.moleculeGained = player.moleculeGained.plus(1)
-    player.moleculeNextReq = player.moleculeNextReq.times(player.moleculeReqScale)
-    failsafe++
-  }
 }
 
 function updateLoreDisplay() {
@@ -374,14 +272,15 @@ function updateAllDisplay() {
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
   decideElementDisplay("particleClickGainContainer", player.storyId>=6)
+  decideElementDisplay("expTabBtn", player.itemAmounts.upgrade[2].neq(0))
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("loreTabBtn", player.storyId>=6)
   decideElementDisplay("particlePerSecDisplayContainer", particlePerSec().gt(0))
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
-  decideElementDisplay("moleculeDisplayContainer", player.storyId>=10)
-  decideElementDisplay("cranksTabBtn", player.storyId>=12)
-  decideElementDisplay("crankEffectDisplayContainer", player.storyId>=12)
+  decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
+  decideElementDisplay("cranksTabBtn", player.itemAmounts.upgrade[4].neq(0))
+  decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
 }
 
 function gameLoop(diff) { // 1 diff = 0.001 seconds
@@ -418,7 +317,6 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     }
     player.particleAmount = Decimal.min(player.particleCap, player.particleAmount)
     checkMilestone()
-    checkMoleculeGain()
   }
 
   // Crank speed handle

@@ -40,6 +40,7 @@
             <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
             <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
             <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
+            <li class="nav-item" id="expTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('exp')">Experiments</a></li>
             <li class="nav-item" id="cranksTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('cranks')">Cranks</a></li>
             <li class="nav-item" id="loreTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('lore')">Lore</a></li>
             <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
@@ -120,21 +121,31 @@
                         </tr>
                         <tr>
                             <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">0.5 less particles are required per atom</td>
+                            <td class="align-middle" style="height: 60px;">Build a facility where you can try and make some cool stuff happen</td>
                             <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(2, 'upgrade')">Build</button></td>
                         </tr>
                         <tr>
                             <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">Construct a Crank out of molecules</td>
+                            <td class="align-middle" style="height: 60px;">0.5 less particles are required per atom</td>
                             <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"></td>
                             <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(3, 'upgrade')">Build</button></td>
                         </tr>
+                        <tr>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;">Construct a Crank out of molecules</td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"></td>
+                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(4, 'upgrade')">Build</button></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="container" style="margin: 0px 0px;" id="expTab" style="diplay:none">
+            <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;">This feature is still under development.</span></div>
         </div>
         <div class="container" style="margin: 0px 0px;" id="cranksTab" style="diplay:none">
             <div class="container" id="crankSpeedBar" style="margin: 0px 0px;"></div>
@@ -156,6 +167,7 @@
         <script src="javascripts/clipboard.js"></script>
         <script src="javascripts/display.js"></script>
         <script src="javascripts/format.js"></script>
+        <script src="javascripts/upgrade.js"></script>
         <script src="javascripts/main.js"></script>
         <script src="javascripts/crank.js"></script>
         <script src="javascripts/saving.js"></script>
