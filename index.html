@@ -1,206 +1,195 @@
 <!DOCTYPE html>
 <!--3c wanted commit and this is the best I can do-->
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Project Universal</title>
-        <!-- Bootstrap -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="style.css" />
-        <script>
-            function openInNewTab(url) {
-                var win = window.open(url, '_blank');
-                win.focus();
-            }
-        </script>
-    </head>
-    <body style="height: 100%;" onload="startGame()">
-        <nav class="navbar navbar-light navbar-expand-md" style="background-color: #f8f4f4;">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Project Universal</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse"
-                    id="navcol-1">
-                    <ul class="nav navbar-nav">
-                        <li class="nav-item" role="presentation"><a class="nav-link" onclick="openInNewTab('https://discordapp.com/invite/kKafxyn')">Discord</a></li>
-                        <li class="nav-item" role="presentation"><a class="nav-link" onclick="openInNewTab('https://www.reddit.com/r/ProjectUniversal/')">Reddit</a></li>
-                        <li class="nav-item" role="presentation"></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div class="container" style="margin: 0px;"><span style="font-size: 25px;margin: 19px;" id="storyDisplay">Game still loading or broke!</span></div>
-        <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary" type="button" style="margin: -1px;" id="storyNext">Click to Continue</button></div>
-        <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;" id="atomCount">You have 0 atoms</span></div>
-        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="moleculeDisplayContainer"><span style="color: rgb(141,150,157);">You have <span id="moleculeAmount">0</span> molecules</div>
-        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="atomCountContainer"><span style="color: rgb(141,150,157);">There are <span id="particle">0</span>/<span id="particleCap">10</span> Particles, next Particle merging in <span id="timeTillNextAtom">1</span> seconds</span></div>
-        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="crankEffectDisplayContainer"><span style="color: rgb(141,150,157);">Your crank is spinning at a speed of <span id="crankSpeedDisplay">?</span>, translated to <span id="crankBoostDisplay">?</span>x effectiveness for your buildings</div>
-        <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="particlePerSecDisplayContainer"><span style="color: rgb(141,150,157);">Your buildings are producing <span id="particlePerSecDisplay">?</span> particles per second</div>
-        <div class="container" style="margin: 1.5625%;" id="particleClickGainContainer"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="particleClickGain">Create 2 Particles</button></div>
-        <ul class="nav nav-tabs" id="tabBtnContainer">
-            <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
-            <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
-            <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
-            <li class="nav-item" id="expTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('exp')">Experiments</a></li>
-            <li class="nav-item" id="cranksTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('cranks')">Cranks</a></li>
-            <li class="nav-item" id="loreTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('lore')">Lore</a></li>
-            <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
-        </ul>
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr></tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+  <head>
+    <meta charset="UTF-8">
+    <title>Project Universal</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script>
+      function openInNewTab(url) {
+          var win = window.open(url, '_blank');
+          win.focus();
+      }
+    </script>
+  </head>
+  <body style="height: 100%;" onload="startGame()">
+    <nav class="navbar navbar-light navbar-expand-md" style="background-color: #f8f4f4;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Project Universal</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse"
+          id="navcol-1">
+          <ul class="nav navbar-nav">
+            <li class="nav-item" role="presentation"><a class="nav-link" onclick="openInNewTab('https://discordapp.com/invite/kKafxyn')">Discord</a></li>
+            <li class="nav-item" role="presentation"><a class="nav-link" onclick="openInNewTab('https://www.reddit.com/r/ProjectUniversal/')">Reddit</a></li>
+            <li class="nav-item" role="presentation"></li>
+          </ul>
         </div>
-        <div class="container" style="margin: 0px 0px;" id="generatorTab" style="display:none">
-            <div style="font-size: 25px;margin: 19px;">Generator</div>
-            <button class="btn btn-danger" type="button" id="genActivateBtn">Activate (NO TURNBACK)</button>
-        </div>
-        <div class="container" style="margin: 0px 0px;" id="buildingsTab" style="display:none">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style="width: 25%;">Name</th>
-                            <th style="width: 25%;">Effectiveness</th>
-                            <th style="width: 25%;">Price</th>
-                            <th style="width: 25%;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="buildingRows">
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'building')">Build</button></td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-secondary align-middle" type="button" onclick="buyItem(1, 'building')">Build</button></td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-secondary align-middle" type="button" onclick="buyItem(2, 'building')">Build</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="container" style="margin: 0px 0px;" id="upgradesTab" style="diplay:none">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style="width: 20%;">Name</th>
-                            <th style="width: 20%;">Description</th>
-                            <th style="width: 20%;">Effect</th>
-                            <th style="width: 20%;">Price</th>
-                            <th style="width: 20%;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="upgradeRows">
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">2x Atom can be merged every second</td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'upgrade')">Build</button></td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">10x bigger particle storage</td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(1, 'upgrade')">Build</button></td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">Build a facility where you can try and make some cool stuff happen</td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(2, 'upgrade')">Build</button></td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">0.5 less particles are required per atom</td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(3, 'upgrade')">Build</button></td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">Construct a Crank out of molecules</td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(4, 'upgrade')">Build</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="container" style="margin: 0px 0px;" id="expTab" style="diplay:none">
-          <div class="slidecontainer">
-            <input type="range" min="0" max="100" value="0" class="slider" id="expSpendPercent">
-            <span id="expSpendPercentDisplay">Disposing 0% of particles gained into experiments</span>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th style="width: 20%;">Name</th>
-                            <th style="width: 20%;">Description</th>
-                            <th style="width: 20%;">Effect</th>
-                            <th style="width: 20%;">Particles needed</th>
-                            <th style="width: 20%;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="expRows">
-                        <tr>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;">The exp mechanic tester</td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"></td>
-                            <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'upgrade')">Start</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-          </div>
-        </div>
-        <div class="container" style="margin: 0px 0px;" id="cranksTab" style="diplay:none">
-            <div class="container" id="crankSpeedBar" style="margin: 0px 0px;"></div>
-            <br>
-            <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="spinCrank()">Spin the Crank</button></div>
-
-        </div>
-        <div class="container" style="margin: 0px 0px;" id="loreTab" style="diplay:none">
-            <div class="container" style="margin: 0px;"><span style="font-size: 25px;" id="loreDisplay"></span></div>
-        </div>
-        <div class="container" style="margin: 0px 0px;" id="optionsTab" style="diplay:none">
-            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="saveGame()">Save now</button>
-            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="exportGame()">Export</button>
-            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="importGame()">Import</button>
-            <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="hardReset()">HARD RESET</button>
-        </div>
-        <script src="javascripts/break_infinity.min.js"></script>
-        <script src="javascripts/progressbar.min.js"></script>
-        <script src="javascripts/clipboard.js"></script>
-        <script src="javascripts/display.js"></script>
-        <script src="javascripts/format.js"></script>
-        <script src="javascripts/upgrade.js"></script>
-        <script src="javascripts/exp.js"></script>
-        <script src="javascripts/item.js"></script>
-        <script src="javascripts/main.js"></script>
-        <script src="javascripts/crank.js"></script>
-        <script src="javascripts/saving.js"></script>
-        <!-- vv Load scripts here! vv -->
-        <!-- Bootstrap -->
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    </body>
+      </div>
+    </nav>
+    <div class="container" style="margin: 0px;"><span style="font-size: 25px;margin: 19px;" id="storyDisplay">Game still loading or broke!</span></div>
+    <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary" type="button" style="margin: -1px;" id="storyNext">Click to Continue</button></div>
+    <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;" id="atomCount">You have 0 atoms</span></div>
+    <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="moleculeDisplayContainer"><span style="color: rgb(141,150,157);">You have <span id="moleculeAmount">0</span> molecules</span></div>
+    <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="atomCountContainer"><span style="color: rgb(141,150,157);">There are <span id="particle">0</span>/<span id="particleCap">10</span> Particles, next Particle merging in <span id="timeTillNextAtom">1</span> seconds</span></div>
+    <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="crankEffectDisplayContainer"><span style="color: rgb(141,150,157);">Your crank is spinning at a speed of <span id="crankSpeedDisplay">?</span>, translated to <span id="crankBoostDisplay">?</span>x effectiveness for your buildings</span></div>
+    <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="particlePerSecDisplayContainer"><span style="color: rgb(141,150,157);">Your buildings are producing <span id="particlePerSecDisplay">?</span> particles per second</span></div>
+    <div class="container" style="margin: 1.5625%;" id="particleClickGainContainer"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="particleClickGain">Create 2 Particles</button></div>
+    <ul class="nav nav-tabs" id="tabBtnContainer">
+      <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
+      <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
+      <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
+      <li class="nav-item" id="expTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('exp')">Experiments</a></li>
+      <li class="nav-item" id="cranksTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('cranks')">Cranks</a></li>
+      <li class="nav-item" id="loreTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('lore')">Lore</a></li>
+      <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
+    </ul>
+    <div class="container" style="margin: 0px 0px; display:none;" id="generatorTab">
+      <div style="font-size: 25px;margin: 19px;">Generator</div>
+      <button class="btn btn-danger" type="button" id="genActivateBtn">Activate (NO TURNBACK)</button>
+    </div>
+    <div class="container" style="margin: 0px 0px; display:none;" id="buildingsTab">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 25%;">Name</th>
+              <th style="width: 25%;">Effectiveness</th>
+              <th style="width: 25%;">Price</th>
+              <th style="width: 25%;"></th>
+            </tr>
+          </thead>
+          <tbody id="buildingRows">
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'building')">Build</button></td>
+            </tr>
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-secondary align-middle" type="button" onclick="buyItem(1, 'building')">Build</button></td>
+            </tr>
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-secondary align-middle" type="button" onclick="buyItem(2, 'building')">Build</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px 0px; display:none" id="upgradesTab">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Name</th>
+              <th style="width: 20%;">Description</th>
+              <th style="width: 20%;">Effect</th>
+              <th style="width: 20%;">Price</th>
+              <th style="width: 20%;"></th>
+            </tr>
+          </thead>
+          <tbody id="upgradeRows">
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;">2x Atom can be merged every second</td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(0, 'upgrade')">Build</button></td>
+            </tr>
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;">10x bigger particle storage</td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(1, 'upgrade')">Build</button></td>
+            </tr>
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;">Build a facility where you can try and make some cool stuff happen</td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(2, 'upgrade')">Build</button></td>
+            </tr>
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;">0.5 less particles are required per atom</td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(3, 'upgrade')">Build</button></td>
+            </tr>
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;">Construct a Crank out of molecules</td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="buyItem(4, 'upgrade')">Build</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px 0px; display:none;" id="expTab">
+      <input type="range" min="0" max="100" value="0" class="slider" id="expSpendPercent">
+      <span id="expSpendPercentDisplay">Disposing 0% of particles gained into experiments</span>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="width: 20%;">Name</th>
+              <th style="width: 20%;">Description</th>
+              <th style="width: 20%;">Goal</th>
+              <th style="width: 20%;">Particles needed</th>
+              <th style="width: 20%;"></th>
+            </tr>
+          </thead>
+          <tbody id="expRows">
+            <tr>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;">The exp mechanic tester</td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="startExp(0)">Start</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="container" style="margin: 0px 0px; display:none" id="cranksTab">
+      <div class="container" id="crankSpeedBar" style="margin: 0px 0px;"></div>
+      <br>
+      <div class="container" style="margin: 1.5625%;"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="spinCrank()">Spin the Crank</button></div>
+    </div>
+    <div class="container" style="margin: 0px 0px; display:none" id="loreTab">
+      <div class="container" style="margin: 0px;"><span style="font-size: 25px;" id="loreDisplay"></span></div>
+    </div>
+    <div class="container" style="margin: 0px 0px; display:none" id="optionsTab">
+      <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="saveGame()">Save now</button>
+      <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="exportGame()">Export</button>
+      <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="importGame()">Import</button>
+      <button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" onclick="hardReset()">HARD RESET</button>
+    </div>
+    <script src="javascripts/break_infinity.min.js"></script>
+    <script src="javascripts/progressbar.min.js"></script>
+    <script src="javascripts/clipboard.js"></script>
+    <script src="javascripts/display.js"></script>
+    <script src="javascripts/format.js"></script>
+    <script src="javascripts/upgrade.js"></script>
+    <script src="javascripts/exp.js"></script>
+    <script src="javascripts/item.js"></script>
+    <script src="javascripts/main.js"></script>
+    <script src="javascripts/crank.js"></script>
+    <script src="javascripts/saving.js"></script>
+    <!-- vv Load scripts here! vv -->
+    <!-- Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha384-vk5WoKIaW/vJyUAd9n/wmopsmNhiy+L2Z+SBxGYnUkunIxVxAv/UtMOhba/xskxh" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
 </html>
