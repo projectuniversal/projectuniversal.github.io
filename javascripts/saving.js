@@ -40,6 +40,7 @@ function onLoad() { // Put your savefile updating codes here
       hardReset(true)
     }
     changeTab(player.storyId<6?"generator":"buildings")
+    getElement("expSpendPercent").value = player.expSpendPercent
     refreshItems()
     refreshCrankStats()
     updateAllUpgradeEffect()
