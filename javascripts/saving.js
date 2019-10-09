@@ -33,35 +33,14 @@ function onImportSuccess() {
 }
 
 function onLoad() { // Put your savefile updating codes here
-    if (player.version === null) player.version = 1
-    if (player.version < 3) delete player.inPrologue
-    if (player.version < 4) {
-        delete player.queueTime
-        delete player.queueInterval
-        delete player.atomInQueue
-        delete player.queueCap
-    }
-    if (player.version < 5) {
-        delete player.buildingCosts
-        delete player.buildingPowers
-        delete player.buildingCostScales
-        player.itemAmounts.building = player.buildingAmounts
-        delete player.buildingAmounts
-    }
-    if (player.version == 7) {
-      player.molecule = new Decimal(player.placeholder)
-      player.moleculeGained = new Decimal(player.palceholderGained)
-      player.moleculeNextReq = new Decimal(player.placeholderNextReq)
-      player.moleculeReqScale = new Decimal(player.placeholderReqScale)
-      delete player.placeholder
-      delete player.placeholderGained
-      delete player.placeholderNextReq
-      delete player.placeholderReqScale
-      player.version++
+    if (player.version === null || player.version<9) {
+      alert("Your save is obsolete, which means you will be forced to do a hard reset before proceed, sorry!")
+      if (confirm("Would you like to export the save for backup? THIS IS THE ONLY CHANCE TO KEEP THE OLD SAVE")) exportGame()
+      alert("Now we will perform a hard reset, if you decide to export before doing it, REFRESH NOW AND CHOOSE YES IN THE PREVIOUS PROMPT!")
+      hardReset(true)
     }
     changeTab(player.storyId<6?"generator":"buildings")
     refreshItems()
-    refreshMoleculeReq()
     refreshCrankStats()
     updateAllUpgradeEffect()
     updateTabDisplay()
