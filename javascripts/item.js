@@ -1,13 +1,13 @@
 var foo = { // I just can't name this one
   building: "Owned",
   upgrade: "Owned",
-  exp: "Did"
+  research: "Did"
 }
 
 var displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
-    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Experiment facility", "More efficient Atom merging", "The Cranks"],
-    exp: ["Dummy Experiment"]
+    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Research facility", "More efficient Atom merging", "The Cranks"],
+    research: ["Dummy Research"]
 }
 
 function showItem(type,id) {
@@ -16,7 +16,7 @@ function showItem(type,id) {
       return true
     case "upgrade":
       return showUpgrade(id)
-    case "exp":
+    case "research":
       return true
   }
 }
@@ -27,8 +27,8 @@ function getItemEffectDisplay(type, id) {
       return `${shortenMoney(player.itemPowers.building[id])} particle/s`
     case "upgrade":
       return getUpgradeEffectDisplay(id)
-    case "exp":
-      return getExpEffectDisplay(id)
+    case "research":
+      return getResearchEffectDisplay(id)
   }
 }
 
@@ -48,7 +48,7 @@ function getItemCostCurrencyName(type, id) {
         default:
           return "bug"
       }
-    case "exp":
+    case "research":
       return "particle"
   }
 }
@@ -58,7 +58,7 @@ function getItemAvailability(type, id) {
     case "building":
     case "upgrade":
       return player.itemAmounts[type][id].neq(player.itemAmountCaps[type][id])?canBuyItem(id, type)?2:1:0
-    case "exp":
+    case "research":
       return player.itemAmounts[type][id].neq(player.itemAmountCaps[type][id])?2:0
   }
 }
@@ -66,7 +66,7 @@ function getItemAvailability(type, id) {
 var itemDisplayTexts = {
   building: ["Maxed", "Can't afford", "Buy"],
   upgrade: ["Maxed", "Can't afford", "Buy"],
-  exp: ["Maxed", "", "Start"]
+  research: ["Maxed", "", "Start"]
 }
 
 function updateItemTable(type) {

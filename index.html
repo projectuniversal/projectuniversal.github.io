@@ -40,7 +40,7 @@
       <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
       <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
       <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
-      <li class="nav-item" id="expTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('exp')">Experiments</a></li>
+      <li class="nav-item" id="researchTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('research')">Research</a></li>
       <li class="nav-item" id="cranksTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('cranks')">Cranks</a></li>
       <li class="nav-item" id="loreTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('lore')">Lore</a></li>
       <li class="nav-item" id="optionsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('options')">Options</a></li>
@@ -135,10 +135,10 @@
         </table>
       </div>
     </div>
-    <div class="container" style="margin: 0px 0px; display:none;" id="expTab">
-      <input type="range" min="0" max="100" value="0" class="slider" id="expSpendPercent">
-      <span id="expSpendPercentDisplay">Disposing 0% of particles gained into experiments</span>
-      <div id="expStat">Currently doing nothing.</div>
+    <div class="container" style="margin: 0px 0px; display:none;" id="researchTab">
+      <input type="range" min="0" max="100" value="0" class="slider" id="researchSpendPercent">
+      <span id="researchSpendPercentDisplay">Dumping 0% of particles gained into research</span>
+      <div id="researchStat">Currently doing nothing.</div>
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -150,13 +150,13 @@
               <th style="width: 20%;"></th>
             </tr>
           </thead>
-          <tbody id="expRows">
+          <tbody id="researchRows">
             <tr>
               <td class="align-middle" style="height: 60px;"></td>
-              <td class="align-middle" style="height: 60px;">The exp mechanic tester</td>
+              <td class="align-middle" style="height: 60px;">The research mechanic tester</td>
               <td class="align-middle" style="height: 60px;"></td>
               <td class="align-middle" style="height: 60px;"></td>
-              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="startExp(0)">Start</button></td>
+              <td class="align-middle" style="height: 60px;"><button class="btn btn-success align-middle" type="button" onclick="startResearch(0)">Start</button></td>
             </tr>
           </tbody>
         </table>
@@ -182,7 +182,7 @@
     <script src="javascripts/display.js"></script>
     <script src="javascripts/format.js"></script>
     <script src="javascripts/upgrade.js"></script>
-    <script src="javascripts/exp.js"></script>
+    <script src="javascripts/research.js"></script>
     <script src="javascripts/item.js"></script>
     <script src="javascripts/main.js"></script>
     <script src="javascripts/crank.js"></script>
