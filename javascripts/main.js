@@ -13,33 +13,33 @@ function getDefaultPlayer() {
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
           upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
-          exp: [new Decimal(0)]
+          research: [new Decimal(0)]
         },
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
           upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2)],
-          exp: [new Decimal(100)]
+          research: [new Decimal(100)]
         },
         itemPowers: {
           building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
           upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0)],
-          exp: [new Decimal(0)]
+          research: [new Decimal(0)]
         },
         itemCostScales: {
           building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
           upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1)],
-          exp: [new Decimal(1)]
+          research: [new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
           upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1)],
-          exp: [new Decimal(-1)]
+          research: [new Decimal(-1)]
         },
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
-        expSpendPercent: 0,
-        expParticleSpent: new Decimal(0),
-        expCurrentId: -1,
+        researchSpendPercent: 0,
+        researchParticleSpent: new Decimal(0),
+        researchCurrentId: -1,
         crankSpeed: new Decimal(0),
         crankSpeedCap: new Decimal(100),
         crankSpinPower: new Decimal(5),
@@ -65,10 +65,10 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Building unlocked.",
                   "Upgrades unlocked.",
                   "Tier 1 unlocked.",
-                  "Experiments unlocked.",
+                  "Research unlocked.",
                   "Tier 2 unlocked.",
                   "Cranks unlocked, end of content."]
-let existingTabNames = ["generator","buildings","upgrades","exp","cranks","lore","options"]
+let existingTabNames = ["generator","buildings","upgrades","research","cranks","lore","options"]
 let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
@@ -81,8 +81,8 @@ setOnclick("genActivateBtn", function() {
     prologueGenActivated = true
 })
 setOnclick("particleClickGain",createParticle)
-getElement("expSpendPercent").oninput = function() {
-  player.expSpendPercent = this.value
+getElement("researchSpendPercent").oninput = function() {
+  player.researchSpendPercent = this.value
 }
 
 function startInterval() {
@@ -176,8 +176,8 @@ function particlePerSec(total = false) {
   }
   ret = ret.times(getCrankBoost())
   if (total) return ret
-  if (player.expCurrentId == -1) return [ret, new Decimal(0)]
-  return [ret.times(1-(player.expSpendPercent/100)), ret.times(player.expSpendPercent/100)]
+  if (player.researchCurrentId == -1) return [ret, new Decimal(0)]
+  return [ret.times(1-(player.researchSpendPercent/100)), ret.times(player.researchSpendPercent/100)]
 }
 
 function getCurrentTier() {
@@ -250,7 +250,7 @@ function updateLoreDisplay() {
 function updateAllDisplay() {
   updateItemTable("building")
   updateItemTable("upgrade")
-  updateItemTable("exp")
+  updateItemTable("research")
   updateCrankSpeedBar()
   updateLoreDisplay()
   updateDisposePercent()
@@ -266,12 +266,12 @@ function updateAllDisplay() {
   updateElement("crankSpeedDisplay", shortenMoney(player.crankSpeed))
   updateElement("crankBoostDisplay", shortenMoney(getCrankBoost()))
   updateElement("particlePerSecDisplay", shortenMoney(particlePerSec(true)))
-  updateElement("expStat", getExpStat())
+  updateElement("researchStat", getResearchStat())
   decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
   decideElementDisplay("particleClickGainContainer", player.storyId>=6)
-  decideElementDisplay("expTabBtn", player.itemAmounts.upgrade[2].neq(0))
+  decideElementDisplay("researchTabBtn", player.itemAmounts.upgrade[2].neq(0))
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("loreTabBtn", player.storyId>=6)
@@ -284,7 +284,7 @@ function updateAllDisplay() {
 
 function getArrayTypeList() {
   let ret = {};
-  ["building","upgrade","exp"].forEach(function(itemType) {
+  ["building","upgrade","research"].forEach(function(itemType) {
     ["itemAmounts","itemCosts","itemPowers","itemCostScales","itemAmountCaps"].forEach(function(itemProperty) {
       ret[`${itemProperty}.${itemType}`] = "Decimal"
     })
@@ -327,13 +327,13 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     checkMilestone()
   }
 
-  // Exp handle
-  if (player.expCurrentId != -1) {
-    player.expParticleSpent = player.expParticleSpent.plus(particlePerSec()[1].times(diff).div(1000))
-    if (player.expParticleSpent.gte(player.itemCosts.exp[player.expCurrentId])) {
-      player.expParticleSpent = new Decimal(0)
-      player.itemAmounts.exp[player.expCurrentId] = player.itemAmounts.exp[player.expCurrentId].plus(1)
-      player.expCurrentId = -1
+  // Research handle
+  if (player.researchCurrentId != -1) {
+    player.researchParticleSpent = player.researchParticleSpent.plus(particlePerSec()[1].times(diff).div(1000))
+    if (player.researchParticleSpent.gte(player.itemCosts.research[player.researchCurrentId])) {
+      player.researchParticleSpent = new Decimal(0)
+      player.itemAmounts.research[player.researchCurrentId] = player.itemAmounts.research[player.researchCurrentId].plus(1)
+      player.researchCurrentId = -1
     }
   }
 

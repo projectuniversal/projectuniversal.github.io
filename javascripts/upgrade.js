@@ -35,7 +35,7 @@ function getUpgradeEffectDisplay(id) {
       return `${shortenMoney(getUpgradeEffect(id))}x`
       break;
     case 2:
-      return "Unlocks experiments"
+      return "Unlocks Research"
     case 3:
       return `${new Decimal(3).sub(getUpgradeEffect(id))}:1`
     case 4:
