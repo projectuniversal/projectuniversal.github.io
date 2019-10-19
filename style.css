@@ -11,6 +11,7 @@ body {
 #generator {
   position: fixed;
   bottom: 0;
+  padding-left: 10px;
 }
 
 /*#gentext {
