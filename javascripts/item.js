@@ -7,7 +7,7 @@ var foo = { // I just can't name this one
 var displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
     upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Research facility", "More efficient Atom merging", "The Cranks"],
-    research: ["Dummy Research"]
+    research: ["Make a molecule"]
 }
 
 function showItem(type,id) {
