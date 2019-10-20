@@ -28,6 +28,20 @@ function updateUpgradeEffect(id) {
     }
 }
 
+function getUpgradeCostCurrencyName(id) {
+  switch (id) {
+    case 0:
+    case 1:
+    case 2:
+      return "atom"
+    case 3:
+    case 4:
+      return "molecule"
+    default:
+      return "bug"
+  }
+}
+
 function getUpgradeEffectDisplay(id) {
   switch (id) {
     case 0:

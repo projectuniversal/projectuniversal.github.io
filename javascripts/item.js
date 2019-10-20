@@ -10,57 +10,28 @@ var displayNames = {
     research: ["Make a molecule"]
 }
 
-function showItem(type,id) {
-  switch (type) {
-    case "building":
-      return true
-    case "upgrade":
-      return showUpgrade(id)
-    case "research":
-      return true
-  }
+var itemEffectDisplayFunc = {
+  building: (id) => `${shortenMoney(player.itemPowers.building[id])} particle/s`,
+  upgrade: getUpgradeEffectDisplay,
+  research: getResearchEffectDisplay
 }
 
-function getItemEffectDisplay(type, id) {
-  switch (type) {
-    case "building":
-      return `${shortenMoney(player.itemPowers.building[id])} particle/s`
-    case "upgrade":
-      return getUpgradeEffectDisplay(id)
-    case "research":
-      return getResearchEffectDisplay(id)
-  }
+var showItemFunc = {
+  building: () => true,
+  upgrade: showUpgrade,
+  research: () => true
 }
 
-function getItemCostCurrencyName(type, id) {
-  switch (type) {
-    case "building":
-      return "atom"
-    case "upgrade":
-      switch (id) {
-        case 0:
-        case 1:
-        case 2:
-          return "atom"
-        case 3:
-        case 4:
-          return "molecule"
-        default:
-          return "bug"
-      }
-    case "research":
-      return "particle"
-  }
+var itemCostCurrencyNameFunc = {
+  building: () => "atom",
+  upgrade: getUpgradeCostCurrencyName,
+  research: () => "particle"
 }
 
-function getItemAvailability(type, id) {
-  switch (type) {
-    case "building":
-    case "upgrade":
-      return player.itemAmounts[type][id].neq(player.itemAmountCaps[type][id])?canBuyItem(id, type)?2:1:0
-    case "research":
-      return player.itemAmounts[type][id].neq(player.itemAmountCaps[type][id])?2:0
-  }
+var itemAvailabilityFunc = {
+  building: (id) => player.itemAmounts.building[id].neq(player.itemAmountCaps.building[id])?canBuyItem(id, "building")?2:1:0,
+  upgrade: (id) => player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyItem(id, "upgrade")?2:1:0,
+  research: (id) => player.itemAmounts.research[id].neq(player.itemAmountCaps.research[id])?2:0
 }
 
 var itemDisplayTexts = {
@@ -71,14 +42,14 @@ var itemDisplayTexts = {
 
 function updateItemTable(type) {
     Array.from(getElement(`${type}Rows`).rows).forEach((tr, id) => {
-        let showThisItem = showItem(type,id)
+        let showThisItem = showItemFunc[type](id)
         decideElementDisplay(tr, showThisItem)
         if (showThisItem) {
           tr.cells[0].innerHTML = `${displayNames[type][id]} ${player.itemAmounts[type][id].gt(0)?`(${foo[type]} ${shortenMoney(player.itemAmounts[type][id])})`:""}`
-          tr.cells[type == "building"?1:2].innerHTML = getItemEffectDisplay(type, id)
-          tr.cells[type == "building"?2:3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts[type][id]))} ${getItemCostCurrencyName(type, id)}s`
+          tr.cells[type == "building"?1:2].innerHTML = itemEffectDisplayFunc[type](id)
+          tr.cells[type == "building"?2:3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts[type][id]))} ${itemCostCurrencyNameFunc[type](id)}s`
           let buyButton = tr.cells[type == "building"?3:4].childNodes[0]
-          let availability = getItemAvailability(type, id)
+          let availability = itemAvailabilityFunc[type](id)
           let displayTexts = itemDisplayTexts[type]
           buyButton.innerHTML = displayTexts[availability]
           buyButton.classList.toggle("btn-success", availability==2)
