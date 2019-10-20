@@ -202,7 +202,7 @@ function canBuyItem(id, type) {
     case "building":
       return player.atom.gte(Decimal.ceil(player.itemCosts.building[id]))
     case "upgrade":
-      return player[getItemCostCurrencyName(type, id)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
+      return player[itemCostCurrencyNameFunc[type](id)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
     default:
       return false
   }
@@ -210,7 +210,7 @@ function canBuyItem(id, type) {
 
 function buyItem(id, type) {
   if (type == "building" && getCurrentTier()<id) return;
-  let currency = getItemCostCurrencyName(type, id)
+  let currency = itemCostCurrencyNameFunc[type](id)
   if (canBuyItem(id, type)) {
     player.itemAmounts[type][id] = player.itemAmounts[type][id].plus(1)
     player[currency] = player[currency].sub(Decimal.ceil(player.itemCosts[type][id]))
