@@ -85,10 +85,6 @@ getElement("researchSpendPercent").oninput = function() {
   player.researchSpendPercent = this.value
 }
 
-function startInterval() {
-  gameLoopIntervalId = setInterval(gameLoop, 10)
-}
-
 function exportGame() {
     copyStringToClipboard(btoa(JSON.stringify(player)))
     alert("Exported to clipboard")
@@ -106,14 +102,6 @@ function hardReset(forced = false) {
             location.reload()
         }
     }
-}
-
-function startGame() {
-  let savefile = localStorage.getItem(saveName)
-  if (!(savefile === null)) loadGame(savefile)
-  else onLoad()
-  startInterval()
-  setInterval(saveGame,5000)
 }
 
 function endPrologue() {
