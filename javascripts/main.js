@@ -243,7 +243,7 @@ function refreshItems() {
 }
 
 function updateLoreDisplay() {
-  let loreText = player.storyId>=6?storyTexts.slice(6,player.storyId+1).join("<br><br>"):"How did you get here?"
+  let loreText = player.storyId>=6?storyTexts.slice(6,player.storyId+1).reverse().join("<br><br>"):"How did you get here?"
   getElement("loreDisplay").innerHTML = loreText
 }
 
