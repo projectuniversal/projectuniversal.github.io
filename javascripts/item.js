@@ -1,25 +1,29 @@
-var existingTableNames = ["building","upgrade","research"]
+var existingTableNames = ["building","upgrade","research","discover"]
 var tableCellAmounts = {
   building: 4,
   upgrade: 5,
-  research: 5
+  research: 5,
+  discover: 5
 }
 var onclickCodeFunc = {
-  "building": (id) => `buyItem(${id}, 'building')`,
-  "upgrade": (id) => `buyItem(${id}, 'upgrade')`,
-  "research": (id) => `startResearch(${id})`
+  building: (id) => `buyItem(${id}, 'building')`,
+  upgrade: (id) => `buyItem(${id}, 'upgrade')`,
+  research: (id) => `startResearch(${id})`,
+  discover: (id) => `buyItem(${id}, 'discover')`
 }
 
 var foo = { // I just can't name this one
   building: "Owned",
   upgrade: "Owned",
-  research: "Did"
+  research: "Did",
+  discover: "Done"
 }
 
 var displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
     upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Research facility", "More efficient Atom merging", "The Cranks"],
-    research: ["Make a molecule"]
+    research: ["Make a molecule"],
+    discover: ["Molecule cloning"]
 }
 
 var itemDescs = {
@@ -32,37 +36,45 @@ var itemDescs = {
   ],
   research: [
     "Attempt to construct a molecule out of all the particles"
+  ],
+  discover: [
+    "Figure out how to make more molecules"
   ]
 }
 
 var itemEffectDisplayFunc = {
   building: (id) => `${shortenMoney(player.itemPowers.building[id])} particle/s`,
   upgrade: getUpgradeEffectDisplay,
-  research: getResearchEffectDisplay
+  research: getResearchEffectDisplay,
+  discover: getDiscoverEffectDisplay
 }
 
 var showItemFunc = {
   building: () => true,
   upgrade: showUpgrade,
-  research: () => true
+  research: () => true,
+  discover: () => true
 }
 
 var itemCostCurrencyNameFunc = {
   building: () => "atom",
   upgrade: getUpgradeCostCurrencyName,
-  research: () => "particle"
+  research: () => "particle",
+  discover: () => "molecule"
 }
 
 var itemAvailabilityFunc = {
   building: (id) => player.itemAmounts.building[id].neq(player.itemAmountCaps.building[id])?canBuyItem(id, "building")?2:1:0,
   upgrade: (id) => player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])?canBuyItem(id, "upgrade")?2:1:0,
-  research: (id) => player.itemAmounts.research[id].neq(player.itemAmountCaps.research[id])?2:0
+  research: (id) => player.itemAmounts.research[id].neq(player.itemAmountCaps.research[id])?2:0,
+  discover: (id) => player.itemAmounts.discover[id].neq(player.itemAmountCaps.discover[id])?canBuyItem(id, "discover")?2:1:0
 }
 
 var itemDisplayTexts = {
   building: ["Maxed", "Can't afford", "Buy"],
   upgrade: ["Maxed", "Can't afford", "Buy"],
-  research: ["Maxed", "", "Start"]
+  research: ["Mastered", "", "Start"],
+  discover: ["Mastered", "", "Discover"]
 }
 
 function updateItemTable(type) {
