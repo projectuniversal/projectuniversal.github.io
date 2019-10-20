@@ -63,7 +63,7 @@ function showUpgrade(id) {
   if (player.itemAmounts.upgrade[id].eq(player.itemAmountCaps.upgrade[id]) && true) return false // Change true to bool when a toggle exists
   switch (id) {
     case 3:
-      return player.moleculeGained.gt(0)
+      return player.moleculeGained.gt(1)
     case 4:
       return player.itemAmounts.upgrade[3].neq(0)
     default:
