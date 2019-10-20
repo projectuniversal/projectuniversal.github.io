@@ -1,3 +1,15 @@
+var existingTableNames = ["building","upgrade","research"]
+var tableCellAmounts = {
+  building: 4,
+  upgrade: 5,
+  research: 5
+}
+var onclickCodeFunc = {
+  "building": (id) => `buyItem(${id}, 'building')`,
+  "upgrade": (id) => `buyItem(${id}, 'upgrade')`,
+  "research": (id) => `startResearch(${id})`
+}
+
 var foo = { // I just can't name this one
   building: "Owned",
   upgrade: "Owned",
@@ -8,6 +20,19 @@ var displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
     upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Research facility", "More efficient Atom merging", "The Cranks"],
     research: ["Make a molecule"]
+}
+
+var itemDescs = {
+  upgrade: [
+    "2x Atom can be merged every second",
+    "10x bigger particle storage",
+    "Build a facility where you can try and make some cool stuff happen",
+    "0.5 less particles are required per atom",
+    "Construct a Crank out of molecules"
+  ],
+  research: [
+    "Attempt to construct a molecule out of all the particles"
+  ]
 }
 
 var itemEffectDisplayFunc = {
@@ -46,6 +71,7 @@ function updateItemTable(type) {
         decideElementDisplay(tr, showThisItem)
         if (showThisItem) {
           tr.cells[0].innerHTML = `${displayNames[type][id]} ${player.itemAmounts[type][id].gt(0)?`(${foo[type]} ${shortenMoney(player.itemAmounts[type][id])})`:""}`
+          if (type != "building") tr.cells[1].innerHTML = itemDescs[type][id]
           tr.cells[type == "building"?1:2].innerHTML = itemEffectDisplayFunc[type](id)
           tr.cells[type == "building"?2:3].innerHTML = `${shortenMoney(Decimal.ceil(player.itemCosts[type][id]))} ${itemCostCurrencyNameFunc[type](id)}s`
           let buyButton = tr.cells[type == "building"?3:4].childNodes[0]
