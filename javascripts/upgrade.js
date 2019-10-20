@@ -1,3 +1,5 @@
+var upgradeTypes = ["c","c","c","c","c"]
+
 function updateAllUpgradeEffect() {
     for (let i=0;i<player.itemAmounts.upgrade.length;i++) {
         updateUpgradeEffect(i)
