@@ -14,7 +14,14 @@ function startResearch(id) {
 function getResearchEffectDisplay(id) {
   switch (id) {
     case 0:
-      return "One molecule"
+      return "Creation of first molecule"
+  }
+}
+
+function getDiscoverEffectDisplay(id) {
+  switch (id) {
+    case 0:
+      return "Bigger scale production of molecules"
   }
 }
 

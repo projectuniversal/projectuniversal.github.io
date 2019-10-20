@@ -13,27 +13,32 @@ function getDefaultPlayer() {
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
           upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
-          research: [new Decimal(0)]
+          research: [new Decimal(0)],
+          discover: [new Decimal(0)]
         },
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
           upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2)],
-          research: [new Decimal(1e4)]
+          research: [new Decimal(1e4)],
+          discover: [new Decimal(1)]
         },
         itemPowers: {
           building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
           upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0)],
-          research: [new Decimal(0)]
+          research: [new Decimal(0)],
+          discover: [new Decimal(0)]
         },
         itemCostScales: {
           building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
           upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1)],
-          research: [new Decimal(1)]
+          research: [new Decimal(1)],
+          discover: [new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
           upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1)],
-          research: [new Decimal(1)]
+          research: [new Decimal(1)],
+          discover: [new Decimal(1)]
         },
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
@@ -191,6 +196,8 @@ function canBuyItem(id, type) {
       return player.atom.gte(Decimal.ceil(player.itemCosts.building[id]))
     case "upgrade":
       return player[itemCostCurrencyNameFunc[type](id)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
+    case "discover":
+      return player[itemCostCurrencyNameFunc[type](id)].gte(Decimal.ceil(player.itemCosts.discover[id])) && player.itemAmounts.discover[id].neq(player.itemAmountCaps.discover[id])
     default:
       return false
   }
@@ -235,10 +242,15 @@ function updateLoreDisplay() {
   getElement("loreDisplay").innerHTML = loreText
 }
 
-function updateAllDisplay() {
+function updateAllItemTable() {
   updateItemTable("building")
   updateItemTable("upgrade")
   updateItemTable("research")
+  updateItemTable("discover")
+}
+
+function updateAllDisplay() {
+  updateAllItemTable()
   updateCrankSpeedBar()
   updateLoreDisplay()
   updateDisposePercent()
@@ -268,11 +280,12 @@ function updateAllDisplay() {
   decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
   decideElementDisplay("cranksTabBtn", player.itemAmounts.upgrade[4].neq(0))
   decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
+  decideElementDisplay("discoverRows", player.moleculeGained.gt(0))
 }
 
 function getArrayTypeList() {
   let ret = {};
-  ["building","upgrade","research"].forEach(function(itemType) {
+  Object.keys(player.itemAmountCaps).forEach(function(itemType) {
     ["itemAmounts","itemCosts","itemPowers","itemCostScales","itemAmountCaps"].forEach(function(itemProperty) {
       ret[`${itemProperty}.${itemType}`] = "Decimal"
     })
