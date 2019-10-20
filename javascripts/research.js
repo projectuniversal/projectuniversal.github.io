@@ -1,5 +1,7 @@
-var researchStatText = ["Testing the particle tester..."]
-
+var researchStatText = ["Finding particles that can be merged together..."]
+var researchOnFinish = [
+  function() { player.molecule = player.molecule.plus(1); player.moleculeGained = player.moleculeGained.plus(1); }
+]
 function updateDisposePercent() {
   updateElement("researchSpendPercentDisplay", `Dumping ${player.researchSpendPercent}% of particles gained into research`)
 }
@@ -12,7 +14,7 @@ function startResearch(id) {
 function getResearchEffectDisplay(id) {
   switch (id) {
     case 0:
-      return "Nyan Cat's proudness"
+      return "One molecule"
   }
 }
 

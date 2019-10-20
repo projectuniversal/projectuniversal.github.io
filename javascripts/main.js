@@ -18,7 +18,7 @@ function getDefaultPlayer() {
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
           upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2)],
-          research: [new Decimal(100)]
+          research: [new Decimal(1e4)]
         },
         itemPowers: {
           building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
@@ -33,7 +33,7 @@ function getDefaultPlayer() {
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
           upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1)],
-          research: [new Decimal(-1)]
+          research: [new Decimal(1)]
         },
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
@@ -332,6 +332,7 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     player.researchParticleSpent = player.researchParticleSpent.plus(particlePerSec()[1].times(diff).div(1000))
     if (player.researchParticleSpent.gte(player.itemCosts.research[player.researchCurrentId])) {
       player.researchParticleSpent = new Decimal(0)
+      researchOnFinish[player.researchCurrentId]()
       player.itemAmounts.research[player.researchCurrentId] = player.itemAmounts.research[player.researchCurrentId].plus(1)
       player.researchCurrentId = -1
     }
