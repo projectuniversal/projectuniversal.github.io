@@ -33,9 +33,9 @@
     <div class="container" style="margin: 0px 0px;"><span class="d-flex" style="margin: 19px;font-size: 42px;" id="atomCount">You have 0 atoms</span></div>
     <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="moleculeDisplayContainer"><span style="color: rgb(141,150,157);">You have <span id="moleculeAmount">0</span> molecules</span></div>
     <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="atomCountContainer"><span style="color: rgb(141,150,157);">There are <span id="particle">0</span>/<span id="particleCap">10</span> Particles, next Particle merging in <span id="timeTillNextAtom">1</span> seconds</span></div>
-    <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="crankEffectDisplayContainer"><span style="color: rgb(141,150,157);">Your crank is spinning at a speed of <span id="crankSpeedDisplay">?</span>, translated to <span id="crankBoostDisplay">?</span>x effectiveness for your buildings</span></div>
+    <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="crankEffectDisplayContainer"><span style="color: rgb(141,150,157);">Your crank is spinning at a speed of <span id="crankSpeedDisplay">?</span>, translated to <span id="crankBoostDisplay">?</span>x effectiveness for all buildings</span></div>
     <div class="container" style="margin: 19px;font-size: 22px;color: rgb(107,114,120);" id="particlePerSecDisplayContainer"><span style="color: rgb(141,150,157);">Your buildings are producing <span id="particlePerSecDisplay">?</span> particles per second</span></div>
-    <div class="container" style="margin: 1.5625%;" id="particleClickGainContainer"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="particleClickGain">Create 2 Particles</button></div>
+    <div class="container" style="margin: 1.5625%;" id="particleClickGainContainer"><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 0px;" id="particleClickGain">Create 2 Particles</button><button class="btn btn-primary d-inline-flex align-middle" data-aos="fade" type="button" style="margin: 5px;" id="moleculeMergerBtn"></button></div>
     <ul class="nav nav-tabs" id="tabBtnContainer">
       <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
       <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
@@ -69,7 +69,7 @@
       <h2>Merger list:</h2>
       <div style="font-size: 25px;margin: 19px;" id="particleCreatorDesc">Particle creator: Void -> 2 particles, manual activation</div>
       <div style="font-size: 25px;margin: 19px;" id="atomMergerDesc"></div>
-      <div style="font-size: 25px;margin: 19px;" id="moleculeMergerDesc">Molecule merger: 1e4 Atom -> 1 molecule, manual actication, 10s time</div>
+      <div style="font-size: 25px;margin: 19px;" id="moleculeMergerDesc">Molecule merger: 1e4 Atom -> 1 molecule, manual activation, 10s time</div>
     </div>
     <div class="container" style="margin: 0px 0px; display:none" id="upgradesTab">
       <div class="table-responsive">
@@ -148,10 +148,10 @@
     <script src="javascripts/upgrade.js"></script>
     <script src="javascripts/research.js"></script>
     <script src="javascripts/item.js"></script>
-    <script src="javascripts/main.js"></script>
     <script src="javascripts/startup.js"></script>
-    <script src="javascripts/crank.js"></script>
     <script src="javascripts/merger.js"></script>
+    <script src="javascripts/main.js"></script>
+    <script src="javascripts/crank.js"></script>
     <script src="javascripts/saving.js"></script>
     <!-- vv Load scripts here! vv -->
     <!-- Bootstrap -->
