@@ -39,6 +39,7 @@
     <ul class="nav nav-tabs" id="tabBtnContainer">
       <li class="nav-item" id="generatorTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('generator')">Generator</a></li>
       <li class="nav-item" id="buildingsTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('buildings')">Buildings</a></li>
+      <li class="nav-item" id="mergerTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('merger')">Merger</a></li>
       <li class="nav-item" id="upgradesTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('upgrades')">Upgrades</a></li>
       <li class="nav-item" id="researchTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('research')">Research</a></li>
       <li class="nav-item" id="cranksTabBtn"><a class="nav-link" data-toggle="tab" onclick="changeTab('cranks')">Cranks</a></li>
@@ -64,6 +65,12 @@
         </table>
       </div>
     </div>
+    <div class="container" style="margin: 0px 0px; display:none;" id="mergerTab">
+      <h2>Merger list:</h2>
+      <div style="font-size: 25px;margin: 19px;" id="particleCreatorDesc">Particle creator: Void -> 2 particles, manual activation</div>
+      <div style="font-size: 25px;margin: 19px;" id="atomMergerDesc"></div>
+      <div style="font-size: 25px;margin: 19px;" id="moleculeMergerDesc">Molecule merger: 1e4 Atom -> 1 molecule, manual actication, 10s time</div>
+    </div>
     <div class="container" style="margin: 0px 0px; display:none" id="upgradesTab">
       <div class="table-responsive">
         <table class="table">
@@ -72,7 +79,7 @@
               <th style="width: 16%;">Name</th>
               <th style="width: 16%;">Type</th>
               <th style="width: 16%;">Description</th>
-              <th style="width: 16%;">Current Effect</th>
+              <th style="width: 16%;">Effect</th>
               <th style="width: 16%;">Price</th>
               <th style="width: 16%;"></th>
             </tr>
@@ -144,6 +151,7 @@
     <script src="javascripts/main.js"></script>
     <script src="javascripts/startup.js"></script>
     <script src="javascripts/crank.js"></script>
+    <script src="javascripts/merger.js"></script>
     <script src="javascripts/saving.js"></script>
     <!-- vv Load scripts here! vv -->
     <!-- Bootstrap -->

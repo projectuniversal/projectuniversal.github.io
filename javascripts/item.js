@@ -40,9 +40,9 @@ var foo = { // I just can't name this one
 
 var displayNames = {
     building: ["Particle constructor", "T1 Building", "T2 Building"],
-    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Research facility", "More efficient Atom merging", "The Cranks"],
+    upgrade: ["Bigger Atom Merger", "Bigger Particle Storage", "Research facility", "More efficient Atom merging", "The Cranks", "Molecule Merger"],
     research: ["Make a molecule"],
-    discover: ["Molecule cloning"]
+    discover: ["Molecule fusing"]
 }
 
 var itemDescs = {
@@ -51,7 +51,8 @@ var itemDescs = {
     "10x bigger particle storage",
     "Build a facility where you can try and make some cool stuff happen",
     "0.5 less particles are required per atom",
-    "Construct a Crank out of molecules"
+    "Construct a Crank out of molecules",
+    "Make a stable molecule merger with all you have learned"
   ],
   research: [
     "Attempt to construct a molecule out of all the particles"

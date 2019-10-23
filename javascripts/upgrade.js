@@ -1,4 +1,4 @@
-var upgradeTypes = ["c","c","c","c","c"]
+var upgradeTypes = ["c","c","c","c","c","e"]
 
 function updateAllUpgradeEffect() {
     for (let i=0;i<player.itemAmounts.upgrade.length;i++) {
@@ -35,6 +35,7 @@ function getUpgradeCostCurrencyName(id) {
     case 0:
     case 1:
     case 2:
+    case 5:
       return "atom"
     case 3:
     case 4:
@@ -56,6 +57,8 @@ function getUpgradeEffectDisplay(id) {
       return `${new Decimal(3).sub(getUpgradeEffect(id))}:1`
     case 4:
       return "Unlocks the Cranks"
+    case 5:
+      return "Unlocks the molecule merger"
     default:
       return "Missing(BUG)"
   }
@@ -68,6 +71,8 @@ function showUpgrade(id) {
       return player.moleculeGained.gt(1)
     case 4:
       return player.itemAmounts.upgrade[3].neq(0)
+    case 5:
+      return player.itemAmounts.discover[0].neq(0)
     default:
       return true
   }
