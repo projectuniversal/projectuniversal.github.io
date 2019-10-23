@@ -10,6 +10,7 @@ function getDefaultPlayer() {
         particleCap: new Decimal(20),
         particleCreatePower: new Decimal(2),
         particleAtomRatio: new Decimal(3),
+        atomMoleculeRatio: new Decimal(1e4),
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
           upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
@@ -40,6 +41,8 @@ function getDefaultPlayer() {
           research: [new Decimal(1)],
           discover: [new Decimal(1)]
         },
+        moleculeMergerOn: false,
+        moleculeMergerTime: 0,
         molecule: new Decimal(0),
         moleculeGained: new Decimal(0),
         researchSpendPercent: 0,
@@ -86,6 +89,7 @@ setOnclick("genActivateBtn", function() {
     prologueGenActivated = true
 })
 setOnclick("particleClickGain",createParticle)
+setOnclick("moleculeMergerBtn",moleculeMergerActivate)
 getElement("researchSpendPercent").oninput = function() {
   player.researchSpendPercent = this.value
 }
@@ -267,6 +271,8 @@ function updateHUD() {
   decideElementDisplay("particlePerSecDisplayContainer", particlePerSec(true).gt(0))
   decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
   decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
+  decideElementDisplay("moleculeMergerBtn", player.itemAmounts.upgrade[5].neq(0))
+  updateElement("moleculeMergerBtn", player.moleculeMergerOn?`Merging... ${player.moleculeMergerTime.toFixed(1)}/10 sec`:"Make 1 molecule with 1e4 Atoms")
 }
 
 function updateTabBtnDisplay() {
@@ -367,6 +373,16 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
       researchOnFinish[player.researchCurrentId]()
       player.itemAmounts.research[player.researchCurrentId] = player.itemAmounts.research[player.researchCurrentId].plus(1)
       player.researchCurrentId = -1
+    }
+  }
+
+  // Molecule merger handle
+  if (player.moleculeMergerOn) {
+    player.moleculeMergerTime += diff/1000
+    if (player.moleculeMergerTime >= 10) {
+      player.moleculeMergerOn = false
+      player.molecule = player.molecule.plus(1)
+      player.moleculeGained = player.molecule.plus(1)
     }
   }
 
