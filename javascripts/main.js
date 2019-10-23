@@ -12,31 +12,31 @@ function getDefaultPlayer() {
         particleAtomRatio: new Decimal(3),
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
-          upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+          upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
           research: [new Decimal(0)],
           discover: [new Decimal(0)]
         },
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
-          upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2)],
+          upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(5e4)],
           research: [new Decimal(1e4)],
           discover: [new Decimal(1)]
         },
         itemPowers: {
           building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
-          upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0)],
+          upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0), new Decimal(0)],
           research: [new Decimal(0)],
           discover: [new Decimal(0)]
         },
         itemCostScales: {
           building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
-          upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1)],
+          upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1), new Decimal(1)],
           research: [new Decimal(1)],
           discover: [new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
-          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1)],
+          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1), new Decimal(1)],
           research: [new Decimal(1)],
           discover: [new Decimal(1)]
         },
@@ -73,7 +73,7 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "Research unlocked.",
                   "Tier 2 unlocked.",
                   "Cranks unlocked, end of content."]
-let existingTabNames = ["generator","buildings","upgrades","research","cranks","lore","options"]
+let existingTabNames = ["generator","buildings","merger","upgrades","research","cranks","lore","options"]
 let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
@@ -249,11 +249,7 @@ function updateAllItemTable() {
   updateItemTable("discover")
 }
 
-function updateAllDisplay() {
-  updateAllItemTable()
-  updateCrankSpeedBar()
-  updateLoreDisplay()
-  updateDisposePercent()
+function updateHUD() {
   let temp = player.mergeInterval-player.mergeTime
   updateElement("timeTillNextAtom", temp<=0?"any":shortenMoney(temp))
   updateElement("atomCount", `You have ${shortenMoney(player.storyId<=5?prologueAtom:player.atom)} Atoms`)
@@ -262,25 +258,60 @@ function updateAllDisplay() {
   updateElement("particleCap", shortenMoney(player.particleCap))
   updateElement("particleClickGain", `Create ${shortenMoney(player.particleCreatePower)} Particles`)
   updateElement("moleculeAmount", shortenMoney(player.molecule))
-  // updateElement("moleculeNextReqDisplay", shortenMoney(player.moleculeNextReq))
   updateElement("crankSpeedDisplay", shortenMoney(player.crankSpeed))
   updateElement("crankBoostDisplay", shortenMoney(getCrankBoost()))
   updateElement("particlePerSecDisplay", shortenMoney(particlePerSec(true)))
-  updateElement("researchStat", getResearchStat())
-  decideElementDisplay("tabBtnContainer", player.storyId>=4)
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
   decideElementDisplay("particleClickGainContainer", player.storyId>=6)
+  decideElementDisplay("particlePerSecDisplayContainer", particlePerSec(true).gt(0))
+  decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
+  decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
+}
+
+function updateTabBtnDisplay() {
   decideElementDisplay("researchTabBtn", player.itemAmounts.upgrade[2].neq(0))
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("loreTabBtn", player.storyId>=6)
-  decideElementDisplay("particlePerSecDisplayContainer", particlePerSec(true).gt(0))
+  decideElementDisplay("mergerTabBtn", player.itemAmounts.discover[0].gt(0))
   decideElementDisplay("upgradesTabBtn", player.storyId>=8)
-  decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
   decideElementDisplay("cranksTabBtn", player.itemAmounts.upgrade[4].neq(0))
-  decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
-  decideElementDisplay("discoverRows", player.moleculeGained.gt(0))
+}
+
+function updateTabContent(tab) {
+  switch (tab) {
+    case "buildings":
+      updateItemTable("building")
+      break;
+    case "merger":
+      updateMergerDescs()
+      decideElementDisplay("moleculeMergerDesc", player.itemAmounts.upgrade[5].neq(0))
+      break;
+    case "upgrades":
+      updateItemTable("upgrade")
+      break;
+    case "research":
+      updateItemTable("research")
+      updateItemTable("discover")
+      updateDisposePercent()
+      updateElement("researchStat", getResearchStat())
+      decideElementDisplay("discoverRows", player.moleculeGained.gt(0))
+      break;
+    case "cranks":
+      updateCrankSpeedBar()
+      break;
+    case "lore":
+      updateLoreDisplay()
+      break;
+  }
+}
+
+function updateAllDisplay() {
+  decideElementDisplay("tabBtnContainer", player.storyId>=4)
+  updateHUD()
+  updateTabBtnDisplay()
+  updateTabContent(currentTab)
 }
 
 function getArrayTypeList() {
