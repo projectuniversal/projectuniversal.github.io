@@ -267,7 +267,7 @@ function updateHUD() {
   updateElement("particlePerSecDisplay", shortenMoney(particlePerSec(true)))
   decideElementDisplay("storyNext", player.storyId<4)
   decideElementDisplay("atomCountContainer", player.storyId>=6)
-  decideElementDisplay("particleClickGainContainer", player.storyId>=6)
+  decideElementDisplay("mergerBtnContainer", player.storyId>=6)
   decideElementDisplay("particlePerSecDisplayContainer", particlePerSec(true).gt(0))
   decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
   decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
