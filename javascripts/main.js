@@ -13,31 +13,31 @@ function getDefaultPlayer() {
         atomMoleculeRatio: new Decimal(1e4),
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
-          upgrade: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
+          development: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
           research: [new Decimal(0)],
           discover: [new Decimal(0)]
         },
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
-          upgrade: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(5e4)],
+          development: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(5e4)],
           research: [new Decimal(1e4)],
           discover: [new Decimal(1)]
         },
         itemPowers: {
           building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
-          upgrade: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0), new Decimal(0)],
+          development: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0), new Decimal(0)],
           research: [new Decimal(0)],
           discover: [new Decimal(0)]
         },
         itemCostScales: {
           building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
-          upgrade: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1), new Decimal(1)],
+          development: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1), new Decimal(1)],
           research: [new Decimal(1)],
           discover: [new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
-          upgrade: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1), new Decimal(1)],
+          development: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1), new Decimal(1)],
           research: [new Decimal(1)],
           discover: [new Decimal(1)]
         },
@@ -54,7 +54,7 @@ function getDefaultPlayer() {
         crankSlowdownRate: new Decimal(10),
         crankSpeedDelta: new Decimal(0),
         crankMaxDelta: new Decimal(50),
-        version: 9
+        version: 10
     }
 }
 
@@ -71,12 +71,12 @@ let storyTexts = ["Your Universe was rapidly decaying.",
                   "SYSTEM: The sum of all matter produced in the universe has surpassed the maximum threshold. Universal collapse in estimated ten seconds.",
                   "The Beginning.",
                   "Building unlocked.",
-                  "Upgrades unlocked.",
+                  "Development unlocked.",
                   "Tier 1 unlocked.",
                   "Research unlocked.",
                   "Tier 2 unlocked.",
                   "Cranks unlocked, end of content."]
-let existingTabNames = ["generator","buildings","merger","upgrades","research","cranks","lore","options"]
+let existingTabNames = ["generator","buildings","merger","development","research","cranks","lore","options"]
 let currentTab = "buildings"
 
 setOnclick("storyNext", function() {
@@ -153,13 +153,13 @@ function checkMilestone() {
       if (player.atom.gte(100)) player.storyId++
       break;
     case 9:
-      if (player.itemAmounts.upgrade[2].neq(0)) player.storyId++
+      if (player.itemAmounts.development[2].neq(0)) player.storyId++
       break;
     case 10:
       if (player.atom.gte(1e4)) player.storyId++
       break;
     case 11:
-      if (player.itemAmounts.upgrade[4].gt(0)) player.storyId++
+      if (player.itemAmounts.development[4].gt(0)) player.storyId++
       break;
     default:
       return;
@@ -198,8 +198,8 @@ function canBuyItem(id, type) {
   switch (type) {
     case "building":
       return player.atom.gte(Decimal.ceil(player.itemCosts.building[id]))
-    case "upgrade":
-      return player[itemCostCurrencyNameFunc[type](id)].gte(Decimal.ceil(player.itemCosts.upgrade[id])) && player.itemAmounts.upgrade[id].neq(player.itemAmountCaps.upgrade[id])
+    case "development":
+      return player[itemCostCurrencyNameFunc[type](id)].gte(Decimal.ceil(player.itemCosts.development[id])) && player.itemAmounts.development[id].neq(player.itemAmountCaps.development[id])
     case "discover":
       return player[itemCostCurrencyNameFunc[type](id)].gte(Decimal.ceil(player.itemCosts.discover[id])) && player.itemAmounts.discover[id].neq(player.itemAmountCaps.discover[id])
     default:
@@ -214,7 +214,7 @@ function buyItem(id, type) {
     player.itemAmounts[type][id] = player.itemAmounts[type][id].plus(1)
     player[currency] = player[currency].sub(Decimal.ceil(player.itemCosts[type][id]))
     player.itemCosts[type][id] = player.itemCosts[type][id].times(player.itemCostScales[type][id])
-    if (type == "upgrade") updateUpgradeEffect(id)
+    if (type == "development") updateDevelopmentEffect(id)
   }
 }
 
@@ -248,7 +248,7 @@ function updateLoreDisplay() {
 
 function updateAllItemTable() {
   updateItemTable("building")
-  updateItemTable("upgrade")
+  updateItemTable("development")
   updateItemTable("research")
   updateItemTable("discover")
 }
@@ -270,19 +270,19 @@ function updateHUD() {
   decideElementDisplay("mergerBtnContainer", player.storyId>=6)
   decideElementDisplay("particlePerSecDisplayContainer", particlePerSec(true).gt(0))
   decideElementDisplay("moleculeDisplayContainer", player.moleculeGained.neq(0))
-  decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.upgrade[4].neq(0))
-  decideElementDisplay("moleculeMergerBtn", player.itemAmounts.upgrade[5].neq(0))
+  decideElementDisplay("crankEffectDisplayContainer", player.itemAmounts.development[4].neq(0))
+  decideElementDisplay("moleculeMergerBtn", player.itemAmounts.development[5].neq(0))
   updateElement("moleculeMergerBtn", player.moleculeMergerOn?`Merging... ${player.moleculeMergerTime.toFixed(1)}/10 sec`:"Make 1 molecule with 1e4 Atoms")
 }
 
 function updateTabBtnDisplay() {
-  decideElementDisplay("researchTabBtn", player.itemAmounts.upgrade[2].neq(0))
+  decideElementDisplay("researchTabBtn", player.itemAmounts.development[2].neq(0))
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("loreTabBtn", player.storyId>=6)
   decideElementDisplay("mergerTabBtn", player.itemAmounts.discover[0].gt(0))
-  decideElementDisplay("upgradesTabBtn", player.storyId>=8)
-  decideElementDisplay("cranksTabBtn", player.itemAmounts.upgrade[4].neq(0))
+  decideElementDisplay("developmentTabBtn", player.storyId>=8)
+  decideElementDisplay("cranksTabBtn", player.itemAmounts.development[4].neq(0))
 }
 
 function updateTabContent(tab) {
@@ -292,10 +292,10 @@ function updateTabContent(tab) {
       break;
     case "merger":
       updateMergerDescs()
-      decideElementDisplay("moleculeMergerDesc", player.itemAmounts.upgrade[5].neq(0))
+      decideElementDisplay("moleculeMergerDesc", player.itemAmounts.development[5].neq(0))
       break;
-    case "upgrades":
-      updateItemTable("upgrade")
+    case "development":
+      updateItemTable("development")
       break;
     case "research":
       updateItemTable("research")

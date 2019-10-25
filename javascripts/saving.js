@@ -27,11 +27,18 @@ function onLoad() { // Put your savefile updating codes here
       alert("Now we will perform a hard reset, if you decide to export before doing it, REFRESH NOW AND CHOOSE YES IN THE PREVIOUS PROMPT!")
       hardReset(true)
     }
+    if (player.version < 10) {
+      ["itemAmounts","itemCosts","itemPowers","itemCostScales","itemAmountCaps"].forEach(function(itemProperty) {
+        Object.defineProperty(player[itemProperty], "development", Object.getOwnPropertyDescriptor(player[itemProperty], "upgrade"));
+        delete player[itemProperty].upgrade;
+        player[itemProperty].development = player[itemProperty].development.map(value => new Decimal(value))
+      })
+    }
     changeTab(player.storyId<6?"generator":"buildings")
     getElement("researchSpendPercent").value = player.researchSpendPercent
     refreshItems()
     refreshCrankStats()
-    updateAllUpgradeEffect()
+    updateAllDevelopmentEffect()
     updateTabDisplay()
 }
 // Only change things above to fit your game UNLESS you know what you're doing
