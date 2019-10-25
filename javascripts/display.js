@@ -10,5 +10,5 @@ function updateElement(element,text) {
 }
 
 function decideElementDisplay(element,bool) {
-  getElement(element).style.display = bool?"":"none"
+  getElement(element).style.setProperty("display", bool?"":"none", "important")
 }
