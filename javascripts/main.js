@@ -227,7 +227,7 @@ function getBuildingState(id) {
 function resetValues(names) {
     let reference = getDefaultPlayer()
     names.forEach(function(name) {
-        eval(`player.${name} = reference.${name}`) // Familiar?
+        _.set(player, name, _.get(reference, name))
     })
 }
 
