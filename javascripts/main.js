@@ -31,7 +31,7 @@ function getDefaultPlayer() {
         },
         itemCostScales: {
           building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
-          development: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1), new Decimal(1)],
+          development: [new Decimal(2.3), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1), new Decimal(1)],
           research: [new Decimal(1), new Decimal(10)],
           discover: [new Decimal(1)]
         },
