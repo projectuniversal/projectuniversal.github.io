@@ -13,6 +13,7 @@ function startResearch(id) {
   if (!canStartResearch(id)) return
   player.researchCurrentId = id
   player.researchParticleSpent = new Decimal(0)
+  player.itemCosts.research[id] = player.itemCosts.research[id].times(player.itemCostScales.research[id])
 }
 
 function updateAllResearchEffect() {
