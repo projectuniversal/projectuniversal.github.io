@@ -10,7 +10,7 @@ function getDefaultPlayer() {
         particleCap: new Decimal(20),
         particleCreatePower: new Decimal(2),
         particleAtomRatio: new Decimal(3),
-        atomMoleculeRatio: new Decimal(1e4),
+        atomMoleculeRatio: new Decimal(5e4),
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
           development: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
@@ -19,8 +19,8 @@ function getDefaultPlayer() {
         },
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
-          development: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(5e4)],
-          research: [new Decimal(1e4)],
+          development: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(2e5)],
+          research: [new Decimal(1e5)],
           discover: [new Decimal(1)]
         },
         itemPowers: {
