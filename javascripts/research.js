@@ -6,8 +6,10 @@ function updateDisposePercent() {
   updateElement("researchSpendPercentDisplay", `Dumping ${player.researchSpendPercent}% of particles gained into research`)
 }
 
+canStartResearch = id => player.researchCurrentId != id && player.itemAmounts.research[id].neq(player.itemAmountCaps.research[id])
+
 function startResearch(id) {
-  if (player.researchCurrentId==id) return
+  if (!canStartResearch(id)) return
   player.researchCurrentId = id
   player.researchParticleSpent = new Decimal(0)
 }
