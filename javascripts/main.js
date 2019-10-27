@@ -10,7 +10,7 @@ function getDefaultPlayer() {
         particleCap: new Decimal(20),
         particleCreatePower: new Decimal(2),
         particleAtomRatio: new Decimal(3),
-        atomMoleculeRatio: new Decimal(5e5),
+        atomMoleculeRatio: new Decimal(2e5),
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
           development: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
