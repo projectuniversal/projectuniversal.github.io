@@ -86,14 +86,14 @@ var itemCostCurrencyNameFunc = {
 var itemAvailabilityFunc = {
   building: (id) => player.itemAmounts.building[id].neq(player.itemAmountCaps.building[id])?canBuyItem(id, "building")?2:1:0,
   development: (id) => player.itemAmounts.development[id].neq(player.itemAmountCaps.development[id])?canBuyItem(id, "development")?2:1:0,
-  research: (id) => player.itemAmounts.research[id].neq(player.itemAmountCaps.research[id])?2:0,
+  research: (id) => player.itemAmounts.research[id].neq(player.itemAmountCaps.research[id])?player.researchCurrentId==id?1:0:2,
   discover: (id) => player.itemAmounts.discover[id].neq(player.itemAmountCaps.discover[id])?canBuyItem(id, "discover")?2:1:0
 }
 
 var itemDisplayTexts = {
   building: ["Maxed", "Can't afford", "Buy"],
   development: ["Maxed", "Can't afford", "Buy"],
-  research: ["Mastered", "", "Start"],
+  research: ["Mastered", "Doing", "Start"],
   discover: ["Mastered", "", "Discover"]
 }
 

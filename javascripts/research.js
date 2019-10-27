@@ -7,6 +7,7 @@ function updateDisposePercent() {
 }
 
 function startResearch(id) {
+  if (player.researchCurrentId==id) return
   player.researchCurrentId = id
   player.researchParticleSpent = new Decimal(0)
 }
