@@ -27,11 +27,9 @@ function updateDevelopmentEffect(id) {
           player.mergePower = getDevelopmentEffect(0)
           break;
         case 1:
-          resetValues(["particleCap"])
-          player.particleCap = player.particleCap.times(getDevelopmentEffect(1))
+          player.particleCap = reference.particleCap.times(getDevelopmentEffect(1))
         case 3:
-          resetValues(["particleAtomRatio"])
-          player.particleAtomRatio = player.particleAtomRatio.sub(getDevelopmentEffect(2))
+          player.particleAtomRatio = reference.particleAtomRatio.sub(getDevelopmentEffect(3))
     }
 }
 

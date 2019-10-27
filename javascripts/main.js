@@ -225,7 +225,6 @@ function getBuildingState(id) {
 }
 
 function resetValues(names) {
-    let reference = getDefaultPlayer()
     names.forEach(function(name) {
         _.set(player, name, _.get(reference, name))
     })
