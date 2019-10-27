@@ -10,35 +10,35 @@ function getDefaultPlayer() {
         particleCap: new Decimal(20),
         particleCreatePower: new Decimal(2),
         particleAtomRatio: new Decimal(3),
-        atomMoleculeRatio: new Decimal(5e4),
+        atomMoleculeRatio: new Decimal(5e5),
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
           development: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
-          research: [new Decimal(0)],
+          research: [new Decimal(0), new Decimal(0)],
           discover: [new Decimal(0)]
         },
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
-          development: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(2e5)],
-          research: [new Decimal(1e5)],
+          development: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(2e6)],
+          research: [new Decimal(1e6), new Decimal(5e4)],
           discover: [new Decimal(1)]
         },
         itemPowers: {
           building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
           development: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0), new Decimal(0)],
-          research: [new Decimal(0)],
+          research: [new Decimal(0), new Decimal(0.8)],
           discover: [new Decimal(0)]
         },
         itemCostScales: {
           building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
           development: [new Decimal(2.5), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1), new Decimal(1)],
-          research: [new Decimal(1)],
+          research: [new Decimal(1), new Decimal(10)],
           discover: [new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
           development: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1), new Decimal(1)],
-          research: [new Decimal(1)],
+          research: [new Decimal(1), new Decimal(5)],
           discover: [new Decimal(1)]
         },
         moleculeMergerOn: false,
@@ -218,13 +218,19 @@ function buyItem(id, type) {
   }
 }
 
-function getBuildingState(id) {
-    if (getCurrentTier() < id) return "Locked"
-    if (player.atom.lt(Decimal.ceil(player.itemCosts.building[id]))) return "Can't afford"
-    return "Buy"
+function updateBuildingCostScales() {
+  let reference = getDefaultPlayer()
+  for (let i=0;i<player.itemAmounts.building.length;i++) {
+    player.itemCostScales.building[i] = reference.itemCostScales.building[i]
+    for (let n=0;player.itemAmounts.research[1].gt(n);n++) {
+      player.itemCostScales.building[i] = new Decimal(1).plus(player.itemCostScales.building[i].minus(1).times(player.itemPowers.research[1]))
+    }
+  }
+  refreshCosts("building")
 }
 
 function resetValues(names) {
+    let reference = getDefaultPlayer()
     names.forEach(function(name) {
         _.set(player, name, _.get(reference, name))
     })
@@ -233,11 +239,16 @@ function resetValues(names) {
 function refreshItems() {
     resetValues(["itemCosts","itemPowers","itemCostScales","itemAmountCaps"])
     Object.keys(player.itemCosts).forEach(function(itemType) {
-        for (let i=0;i<player.itemCosts[itemType].length;i++) {
-            if (typeof player.itemAmounts[itemType][i] != "object") player.itemAmounts[itemType][i] = new Decimal(0)
-            else player.itemCosts[itemType][i] = player.itemCosts[itemType][i].times(Decimal.pow(player.itemCostScales[itemType][i],player.itemAmounts[itemType][i]))
-        }
+        refreshCosts(itemType)
     })
+}
+
+function refreshCosts(itemType) {
+  resetValues([`itemCosts.${itemType}`])
+  for (let i=0;i<player.itemCosts[itemType].length;i++) {
+      if (typeof player.itemAmounts[itemType][i] != "object") player.itemAmounts[itemType][i] = new Decimal(0)
+      else player.itemCosts[itemType][i] = player.itemCosts[itemType][i].times(Decimal.pow(player.itemCostScales[itemType][i],player.itemAmounts[itemType][i]))
+  }
 }
 
 function updateLoreDisplay() {
@@ -369,8 +380,8 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
     player.researchParticleSpent = player.researchParticleSpent.plus(particlePerSec()[1].times(diff).div(1000))
     if (player.researchParticleSpent.gte(player.itemCosts.research[player.researchCurrentId])) {
       player.researchParticleSpent = new Decimal(0)
-      researchOnFinish[player.researchCurrentId]()
       player.itemAmounts.research[player.researchCurrentId] = player.itemAmounts.research[player.researchCurrentId].plus(1)
+      researchOnFinish[player.researchCurrentId]()
       player.researchCurrentId = -1
     }
   }

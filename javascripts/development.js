@@ -22,6 +22,7 @@ function getDevelopmentEffect(id) {
 }
 
 function updateDevelopmentEffect(id) {
+    let reference = getDefaultPlayer()
     switch (id) {
         case 0:
           player.mergePower = getDevelopmentEffect(0)
