@@ -1,7 +1,8 @@
-var developmentTypes = ["c","c","c","c","c","e"]
+var developmentTypes = ["c","c","c","i","e","e"]
 var developmentTypeFullNames = {
   "c":"Construction",
-  "e":"Expansion"
+  "e":"Expansion",
+  "i":"Improvement"
 }
 
 function updateAllDevelopmentEffect() {
