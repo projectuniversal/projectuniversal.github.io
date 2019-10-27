@@ -290,7 +290,7 @@ function updateTabBtnDisplay() {
   decideElementDisplay("generatorTabBtn", player.storyId<6)
   decideElementDisplay("buildingsTabBtn", player.storyId>=6)
   decideElementDisplay("loreTabBtn", player.storyId>=6)
-  decideElementDisplay("mergerTabBtn", player.itemAmounts.upgrade[0].plus(player.itemAmounts.discover[0]).gt(0))
+  decideElementDisplay("mergerTabBtn", player.itemAmounts.development[0].plus(player.itemAmounts.discover[0]).gt(0))
   decideElementDisplay("developmentTabBtn", player.storyId>=8)
   decideElementDisplay("cranksTabBtn", player.itemAmounts.development[4].neq(0))
 }
