@@ -14,31 +14,31 @@ function getDefaultPlayer() {
         itemAmounts: {
           building: [new Decimal(0), new Decimal(0), new Decimal(0)],
           development: [new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0), new Decimal(0)],
-          research: [new Decimal(0), new Decimal(0)],
+          research: [new Decimal(0), new Decimal(0), new Decimal(0)],
           discover: [new Decimal(0)]
         },
         itemCosts: {
           building: [new Decimal(20), new Decimal(100), new Decimal(2e4)],
           development: [new Decimal(50), new Decimal(200), new Decimal(1e3), new Decimal(1), new Decimal(2), new Decimal(2e6)],
-          research: [new Decimal(1e6), new Decimal(5e4)],
+          research: [new Decimal(1e6), new Decimal(5e4), new Decimal(1e5)],
           discover: [new Decimal(1)]
         },
         itemPowers: {
           building: [new Decimal(0.5), new Decimal(3), new Decimal(50)],
           development: [new Decimal(2), new Decimal(10), new Decimal(0), new Decimal(0.5), new Decimal(0), new Decimal(0)],
-          research: [new Decimal(0), new Decimal(0.8)],
+          research: [new Decimal(0), new Decimal(0.8), new Decimal(1.01)],
           discover: [new Decimal(0)]
         },
         itemCostScales: {
           building: [new Decimal(1.1), new Decimal(1.2), new Decimal(1.3)],
           development: [new Decimal(2.3), new Decimal(50), new Decimal(1), new Decimal(2), new Decimal(1), new Decimal(1)],
-          research: [new Decimal(1), new Decimal(10)],
+          research: [new Decimal(1), new Decimal(10), new Decimal(100)],
           discover: [new Decimal(1)]
         },
         itemAmountCaps: {
           building: [new Decimal(-1), new Decimal(-1), new Decimal(-1)],
           development: [new Decimal(-1), new Decimal(-1), new Decimal(1), new Decimal(4), new Decimal(1), new Decimal(1)],
-          research: [new Decimal(1), new Decimal(5)],
+          research: [new Decimal(1), new Decimal(5), new Decimal(3)],
           discover: [new Decimal(1)]
         },
         moleculeMergerOn: false,
@@ -229,6 +229,13 @@ function updateBuildingCostScales() {
   refreshCosts("building")
 }
 
+function updateBuildingPowers() {
+  let reference = getDefaultPlayer()
+  for (let i=0;i<player.itemAmounts.building.length;i++) {
+    player.itemPowers.building[i] = reference.itemPowers.building[i].times(Decimal.pow(player.itemPowers.research[2],player.itemAmounts.building[i].times(player.itemAmounts.research[2])))
+  }
+}
+
 function resetValues(names) {
     let reference = getDefaultPlayer()
     names.forEach(function(name) {
@@ -378,9 +385,11 @@ function gameLoop(diff) { // 1 diff = 0.001 seconds
   // Research handle
   if (player.researchCurrentId != -1) {
     player.researchParticleSpent = player.researchParticleSpent.plus(particlePerSec()[1].times(diff).div(1000))
-    if (player.researchParticleSpent.gte(player.itemCosts.research[player.researchCurrentId])) {
+    let id = player.researchCurrentId
+    if (player.researchParticleSpent.gte(player.itemCosts.research[id])) {
       player.researchParticleSpent = new Decimal(0)
-      player.itemAmounts.research[player.researchCurrentId] = player.itemAmounts.research[player.researchCurrentId].plus(1)
+      player.itemAmounts.research[id] = player.itemAmounts.research[id].plus(1)
+      player.itemCosts.research[id] = player.itemCosts.research[id].times(player.itemCostScales.research[id])
       researchOnFinish[player.researchCurrentId]()
       player.researchCurrentId = -1
     }

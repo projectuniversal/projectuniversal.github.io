@@ -39,6 +39,7 @@ function onLoad() { // Put your savefile updating codes here
   refreshItems()
   refreshCrankStats()
   updateBuildingCostScales()
+  updateBuildingPowers()
   updateAllDevelopmentEffect()
   updateAllResearchEffect()
   updateTabDisplay()

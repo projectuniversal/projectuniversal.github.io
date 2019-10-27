@@ -1,7 +1,12 @@
-var researchStatText = ["Finding particles that can be merged together...","Should have played more Factorio..."]
+var researchStatText = [
+  "Finding particles that can be merged together...",
+  "Should have played more Factorio...",
+  "One cable here, one cable there..."
+]
 var researchOnFinish = [
   function() { player.molecule = player.molecule.plus(2); player.moleculeGained = player.moleculeGained.plus(2); },
-  function() { updateResearchEffect(1); }
+  function() { updateResearchEffect(1); },
+  function() { updateResearchEffect(2); }
 ]
 function updateDisposePercent() {
   updateElement("researchSpendPercentDisplay", `Dumping ${player.researchSpendPercent}% of particles gained into research`)
@@ -13,7 +18,6 @@ function startResearch(id) {
   if (!canStartResearch(id)) return
   player.researchCurrentId = id
   player.researchParticleSpent = new Decimal(0)
-  player.itemCosts.research[id] = player.itemCosts.research[id].times(player.itemCostScales.research[id])
 }
 
 function updateAllResearchEffect() {
@@ -26,6 +30,8 @@ function updateResearchEffect(id) {
   switch (id) {
     case 1:
       updateBuildingCostScales();
+    case 2:
+      updateBuildingPowers();
   }
 }
 
@@ -35,6 +41,8 @@ function getResearchEffectDisplay(id) {
       return "Creation of first molecule"
     case 1:
       return "Cost scale decrease to buildings"
+    case 2:
+      return "Each building increases single production of their tier by a small rate, but compounding"
   }
 }
 
